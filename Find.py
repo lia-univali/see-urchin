@@ -1,31 +1,35 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import imgClass
+from imgClass import *
 import cv2
 import sys
 sys.setrecursionlimit(10**6)
 
-larvas = imgClass.Image("LARVAS_2.jpg")
-larvas.gray.show(221)
+def removeBinary(filename, threshold, showPos):
+    img = Image(filename)
+    img.gray.getWindowed()
+    img.gray.windowed.blur((5, 5))
+    img.gray.windowed.getBinary(threshold)
+    img.gray.windowed.binary.invert()
+    img.gray.windowed.binary.floodFill()
+    img.gray.windowed.binary.removeObjectsBySize(0, 4000)
+    img.gray.windowed.binary.show(showPos)
+    return Img(img.gray.windowed.binary.image)
 
-larvas.gray.getWindowed()
-larvas.gray.windowed.show(222)
+filename = "LARVAS_1.jpg"
 
-larvas.gray.windowed.getBinary(90)
-larvas.gray.windowed.binary.invert()
-larvas.gray.windowed.binary.show(234)
-larvas.gray.windowed.binary.floodFill()
+original = cv2.imread(filename)
 
-larvas.gray.windowed.binary.show(235)
+showImage(cv2.imread(filename), 311)
+sum1 = removeBinary(filename, 80, 323)
+sum2 = removeBinary(filename, 40, 324)
+result = Img(cv2.add(sum1.image, sum2.image))
+result.show(313)
+plt.show()
 
-contours = larvas.gray.windowed.binary.removeObjectsBySize(0, 4000)
-
-
-larvas.gray.windowed.binary.markObjects(larvas.gray.image)
-
-larvas.gray.windowed.binary.show(236)
-
-larvas.gray.show()
+showImage(original, 121)
+result.markObjects(original, [255, 0, 0])
+showImage(original, 122)
 
 
 plt.show()

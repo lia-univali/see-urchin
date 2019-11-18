@@ -61,11 +61,11 @@ class Img:
         self.image = cv2.bitwise_not(self.image)
 
     #---Mark Objects---#
-    def markObjects(self, dst):
+    def markObjects(self, dst, color):
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            cv2.rectangle(dst, (x, y), (x+w, y+h), 128, 5)
+            cv2.rectangle(dst, (x, y), (x+w, y+h), color, 5)
 
     #---Open---#
     def open(self, ksize = (20, 20), ktype = cv2.MORPH_ELLIPSE):
@@ -96,12 +96,42 @@ class Img:
         self.image = img[border[0]:img.shape[0] - border[1], border[2]:img.shape[1] - border[3]]
         self.borders = [0, 0, 0, 0]
 
+    #---Remove Lines---#
+    def removeLines(self, threshold):
+        line = cv2.HoughLines(self.image, 1, np.pi/180, 1000)
+        for i in range(len(line)):
+            for rho,theta in line[i]:
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 5000*(-b))
+                y1 = int(y0 + 5000*(a))
+                x2 = int(x0 - 5000*(-b))
+                y2 = int(y0 - 5000*(a))
+                cv2.line(self.image,(x1,y1),(x2,y2),(0,0,0), 50)
+
     #---Remove Objects by Size---#
     def removeObjectsBySize(self, sizeMin, sizeMax):
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if(sizeMin <= cv2.contourArea(cnt) <= sizeMax or (w > 500 or h > 500)):
+            if(h > w*2):
+                cv2.line(self.image, (x, y + (h//2)), (x+w, y + (h//2)), (0, 0, 0), 1)
+            elif(w > h*2):
+                cv2.line(self.image, (x + (w//2), y), (x + (w//2), y + h), (0, 0, 0), 1)
+            if(sizeMin <= cv2.contourArea(cnt) <= sizeMax or (w > 500 or h > 500) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*0.20)):
+                done = False
+                for i in range(y, y+h):
+                    if not done:
+                        for j in range(x, x+w):
+                            if(self.image[i, j] == 255):
+                                cv2.floodFill(self.image, np.zeros((self.image.shape[0]+ 2, self.image.shape[1] + 2), dtype='uint8'), (j, i), 0)
+                                done = True
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if(sizeMin <= cv2.contourArea(cnt) <= sizeMax or (w > 500 or h > 500) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*0.20)):
                 self.image[y:y+h, x:x+w] = 0
 
     #============================TOOLS============================
@@ -163,8 +193,8 @@ class Img:
     def getSepia(self):
         sepia = np.zeros(self.image.shape)
         img = self.image
-        sepia[:, :, 2] = img[:, :, 0] * 0.272 + img[:, :, 1] * 0.534 + img[:, :, 2] * 0.131
         sepia[:, :, 1] = img[:, :, 0] * 0.349 + img[:, :, 1] * 0.686 + img[:, :, 2] * 0.168
+        sepia[:, :, 2] = img[:, :, 0] * 0.272 + img[:, :, 1] * 0.534 + img[:, :, 2] * 0.131
         sepia[:, :, 0] = img[:, :, 0] * 0.393 + img[:, :, 1] * 0.769 + img[:, :, 2] * 0.189
         sepia[sepia > 255] = 255
         self.sepia = Img(sepia.astype('uint8'))
@@ -228,7 +258,15 @@ class Image:
         self.gray = Img(cv2.cvtColor(self.original.image, cv2.COLOR_BGR2GRAY))
 
 def toBGR(image):
-    return cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+    result = image
+    return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
 
 def toGray(image):
-    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    return cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
+
+def showImage(image, pos = 111, title = "", effect = None):
+        plot = plt.subplot(pos)
+        plot.set_title(title)
+        plot.set_yticks([])
+        plot.set_xticks([])
+        plot.imshow(image, cmap = effect)
