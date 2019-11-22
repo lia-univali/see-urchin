@@ -66,6 +66,7 @@ class Img:
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
             cv2.rectangle(dst, (x, y), (x+w, y+h), color, 5)
+        return len(contours)
 
     #---Open---#
     def open(self, ksize = (20, 20), ktype = cv2.MORPH_ELLIPSE):
@@ -111,29 +112,38 @@ class Img:
                 y2 = int(y0 - 5000*(a))
                 cv2.line(self.image,(x1,y1),(x2,y2),(0,0,0), 50)
 
-    #---Remove Objects by Size---#
-    def removeObjectsBySize(self, sizeMin, sizeMax):
+    def checkForRemovableObjects(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if(h > w*2):
-                cv2.line(self.image, (x, y + (h//2)), (x+w, y + (h//2)), (0, 0, 0), 1)
-            elif(w > h*2):
-                cv2.line(self.image, (x + (w//2), y), (x + (w//2), y + h), (0, 0, 0), 1)
-            if(sizeMin <= cv2.contourArea(cnt) <= sizeMax or (w > 500 or h > 500) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*0.20)):
-                done = False
-                for i in range(y, y+h):
-                    if not done:
-                        for j in range(x, x+w):
-                            if(self.image[i, j] == 255):
-                                cv2.floodFill(self.image, np.zeros((self.image.shape[0]+ 2, self.image.shape[1] + 2), dtype='uint8'), (j, i), 0)
-                                done = True
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        for cnt in contours:
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            if(sizeMin <= cv2.contourArea(cnt) <= sizeMax or (w > 500 or h > 500) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*0.20)):
-                self.image[y:y+h, x:x+w] = 0
+            if(h > w*1.5):
+                return True
+            elif(w > h*1.5):
+                return True
+            elif(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
+                return True
+        return False
 
+    #---Remove Objects by Size---#
+    def removeObjectsBySize(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
+        changed = False
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if(h > w*1.5):
+                cv2.line(self.image, (x, y + (h//2)), (x+w, y + (h//2)), (0, 0, 0), 1)
+                changed = True
+            elif(w > h*1.5):
+                cv2.line(self.image, (x + (w//2), y), (x + (w//2), y + h), (0, 0, 0), 1)
+                changed = True
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
+                self.image[y:y+h, x:x+w] = 0
+                changed = True
+        return changed
+        
     #============================TOOLS============================
     #Functions that do not alter the image
     #---Show---#

@@ -8,11 +8,12 @@ sys.setrecursionlimit(10**6)
 def removeBinary(filename, threshold, showPos):
     img = Image(filename)
     img.gray.getWindowed()
-    img.gray.windowed.blur((5, 5))
     img.gray.windowed.getBinary(threshold)
+    #img.gray.windowed.binary.dilate()
     img.gray.windowed.binary.invert()
     img.gray.windowed.binary.floodFill()
-    img.gray.windowed.binary.removeObjectsBySize(0, 4000)
+    while img.gray.windowed.binary.checkForRemovableObjects(0, 4000):
+        img.gray.windowed.binary.removeObjectsBySize(0, 4000)
     img.gray.windowed.binary.show(showPos)
     return Img(img.gray.windowed.binary.image)
 
@@ -28,8 +29,7 @@ result.show(313)
 plt.show()
 
 showImage(original, 121)
-result.markObjects(original, [255, 0, 0])
+print(f"There are {result.markObjects(original, [255, 0, 0])} larvae")
 showImage(original, 122)
-
 
 plt.show()
