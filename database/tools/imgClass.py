@@ -145,14 +145,16 @@ class Img:
         return changed
         
     #---Write Objects---#
-    def writeObjects(self, originalImage, path = ""):
-        counter = 0
+    def writeObjects(self, dst, path = ""):
+        counter = 44
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            img = originalImage[y:y+h, x:x+w]
+            img = cv2.copyMakeBorder(dst, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=255)
+            img = img[y:(y+h + 20), x:(x+w + 20)]
             filename = path + "/" + str(counter) + ".png"
             cv2.imwrite(filename, cv2.resize(img, (64, 64)))
+            counter += 1
 
     #============================TOOLS============================
     #Functions that do not alter the image
