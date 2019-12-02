@@ -1,9 +1,11 @@
 from ludwig.api import LudwigModel
 import pandas as pd
 
-cvsFile = pd.read_csv('grayscaleTrain.csv')
+folderName = "regular"
+
+cvsFile = pd.read_csv(folderName + '/train.csv')
 print(cvsFile)
-cvsFilePredict = pd.read_csv('grayscaleTest.csv')
+cvsFilePredict = pd.read_csv(folderName + '/predict.csv')
 
 model_definition = {
     'input_features':[

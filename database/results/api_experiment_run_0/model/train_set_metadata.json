@@ -1,0 +1,20 @@
+{
+    "class": {
+        "preprocessing": {
+            "fill_value": 0,
+            "missing_value_strategy": "fill_with_const"
+        }
+    },
+    "image_path": {
+        "preprocessing": {
+            "height": 64,
+            "in_memory": true,
+            "missing_value_strategy": "backfill",
+            "num_channels": 3,
+            "num_processes": 1,
+            "resize_method": "interpolate",
+            "scaling": "pixel_normalization",
+            "width": 64
+        }
+    }
+}

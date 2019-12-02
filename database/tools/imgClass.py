@@ -112,18 +112,6 @@ class Img:
                 y2 = int(y0 - 5000*(a))
                 cv2.line(self.image,(x1,y1),(x2,y2),(0,0,0), 50)
 
-    def checkForRemovableObjects(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        for cnt in contours:
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            if(h > w*1.5):
-                return True
-            elif(w > h*1.5):
-                return True
-            elif(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
-                return True
-        return False
-
     #---Remove Objects by Size---#
     def removeObjectsBySize(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
         changed = False
@@ -143,21 +131,23 @@ class Img:
                 self.image[y:y+h, x:x+w] = 0
                 changed = True
         return changed
-        
-    #---Write Objects---#
-    def writeObjects(self, dst, path = ""):
-        counter = 44
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        for cnt in contours:
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            img = cv2.copyMakeBorder(dst, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=255)
-            img = img[y:(y+h + 20), x:(x+w + 20)]
-            filename = path + "/" + str(counter) + ".png"
-            cv2.imwrite(filename, cv2.resize(img, (64, 64)))
-            counter += 1
 
     #============================TOOLS============================
     #Functions that do not alter the image
+
+    #---Check for Removable Objects---#
+    def checkForRemovableObjects(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if(h > w*1.5):
+                return True
+            elif(w > h*1.5):
+                return True
+            elif(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
+                return True
+        return False
+
     #---Show---#
     def show(self, pos = 111, title = "", effect = None):
         plot = plt.subplot(pos)
@@ -178,6 +168,22 @@ class Img:
         plot.set_title("Light intensity in picture")
         plot.set_xlabel("Intensity")
         plot.bar(intervals, intensities, align = "edge", width = 0.3)
+
+    #---Write Objects---#
+    def writeObjects(self, originalImage, path = "", initialValue = 0):
+        initialCounterValue = initialValue
+        counter = initialCounterValue
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            nW = w//5
+            nH = h//5
+            img = cv2.copyMakeBorder(originalImage, nH, nH, nW, nW, cv2.BORDER_CONSTANT, value=255)
+            img = img[y:y + h + nH * 2, x:x + w + nW * 2]
+            filename = path + "/" + str(counter) + ".png"
+            cv2.imwrite(filename, cv2.resize(img, (64, 64)))
+            counter += 1
+        print(f"Successfully saved {counter - initialCounterValue} images ", end="")
 
     #============================GET-FUNCTIONS============================
     #Functions that create a new Img attribute with the transformed image
