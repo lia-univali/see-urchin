@@ -113,8 +113,9 @@ class Img:
                 cv2.line(self.image,(x1,y1),(x2,y2),(0,0,0), 50)
 
     #---Remove Objects by Size---#
-    def removeObjectsBySize(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
+    def removeObjectsBySize(self, areaMin = 0, sizeMax = 500, minPercentOfNonWhite = 20):
         changed = False
+        imgArea = self.image.shape[0]*self.image.shape[1]
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
@@ -127,7 +128,7 @@ class Img:
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
+            if(areaMin <= cv2.contourArea(cnt) <= imgArea * 0.001271 or (w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
                 self.image[y:y+h, x:x+w] = 0
                 changed = True
         return changed
@@ -136,15 +137,16 @@ class Img:
     #Functions that do not alter the image
 
     #---Check for Removable Objects---#
-    def checkForRemovableObjects(self, areaMin, areaMax, sizeMax = 500, minPercentOfNonWhite = 20):
+    def checkForRemovableObjects(self, areaMin = 0, sizeMax = 500, minPercentOfNonWhite = 20):
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        imgArea = self.image.shape[0]*self.image.shape[1]
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
             if(h > w*1.5):
                 return True
             elif(w > h*1.5):
                 return True
-            elif(areaMin <= cv2.contourArea(cnt) <= areaMax or (w > sizeMax or h > sizeMax) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
+            elif(areaMin <= cv2.contourArea(cnt) <= imgArea * 0.001271 or (w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4) or (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100)):
                 return True
         return False
 
@@ -168,6 +170,27 @@ class Img:
         plot.set_title("Light intensity in picture")
         plot.set_xlabel("Intensity")
         plot.bar(intervals, intensities, align = "edge", width = 0.3)
+
+    #---Write Each Object---#
+    def writeEachObject(self, originalImage, path = "", initialValue = 0):
+        initialCounterValue = initialValue
+        counter = initialCounterValue
+        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            nW = w//5
+            nH = h//5
+            img = cv2.copyMakeBorder(originalImage, nH, nH, nW, nW, cv2.BORDER_CONSTANT, value=255)
+            img = img[y:y + h + nH * 2, x:x + w + nW * 2]
+            filename = path + "/" + str(counter) + ".png"
+            cv2.imshow(f"Save?", img)
+            if(cv2.waitKey(0) == 115):
+                cv2.imwrite(filename, cv2.resize(img, (64, 64)))
+                print(f"Saved {filename}.png")
+                counter += 1
+            else:
+                print("---Did not save picture---")
+        print(f"Successfully saved {counter - initialCounterValue} images ", end="")
 
     #---Write Objects---#
     def writeObjects(self, originalImage, path = "", initialValue = 0):

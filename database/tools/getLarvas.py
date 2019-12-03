@@ -11,7 +11,7 @@ def removeBinary(filename, threshold):
     img.gray.windowed.getBinary(threshold)
     img.gray.windowed.binary.invert()
     img.gray.windowed.binary.floodFill()
-    img.gray.windowed.binary.removeObjectsBySize(0, 4000)
+    img.gray.windowed.binary.removeObjectsBySize()
     return Img(img.gray.windowed.binary.image)
 
 filename = "../../LARVAS_1.jpg"
@@ -22,6 +22,6 @@ sum1 = removeBinary(filename, 80)
 sum2 = removeBinary(filename, 40)
 result = Img(cv2.add(sum1.image, sum2.image))
 
-result.writeObjects(cv2.cvtColor(original, cv2.COLOR_BGR2GRAY), "../regular/img", 0)
+result.writeEachObject(cv2.cvtColor(original, cv2.COLOR_BGR2GRAY), "niggabean", 0)
 print(f"from {filename}.")
 plt.show()
