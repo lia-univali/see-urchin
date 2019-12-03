@@ -97,21 +97,6 @@ class Img:
         self.image = img[border[0]:img.shape[0] - border[1], border[2]:img.shape[1] - border[3]]
         self.borders = [0, 0, 0, 0]
 
-    #---Remove Lines---#
-    def removeLines(self, threshold):
-        line = cv2.HoughLines(self.image, 1, np.pi/180, 1000)
-        for i in range(len(line)):
-            for rho,theta in line[i]:
-                a = np.cos(theta)
-                b = np.sin(theta)
-                x0 = a*rho
-                y0 = b*rho
-                x1 = int(x0 + 5000*(-b))
-                y1 = int(y0 + 5000*(a))
-                x2 = int(x0 - 5000*(-b))
-                y2 = int(y0 - 5000*(a))
-                cv2.line(self.image,(x1,y1),(x2,y2),(0,0,0), 50)
-
     #---Remove Objects by Size---#
     def removeObjectsBySize(self, areaMin = 0, sizeMax = 500, minPercentOfNonWhite = 20):
         changed = False
@@ -290,15 +275,36 @@ class Img:
 
     #---Get Windowed---#
     def getWindowed(self):
-        minThreshold, maxThreshold = 255, 0
+        imgArea = self.image.shape[0] * self.image.shape[1]
+        intensities = np.zeros(256)
         for y in range(self.image.shape[0]):
             for x in range(self.image.shape[1]):
-                maxThreshold = max(maxThreshold, self.image[y, x])
-                minThreshold = min(minThreshold, self.image[y, x])
+                g = self.image[y, x]
+                intensities[g] += 100/imgArea
+        minThreshold, maxThreshold = 0, 0
+
+        for i in range(255, 0, -1):
+            maxThreshold = intensities[i]
+            if maxThreshold > 2:
+                maxThreshold = i
+                break
+            intensities[i - 1] += intensities[i]
+            intensities[i] = 0
+
+        for i in range(255):
+            minThreshold = intensities[i]
+            if minThreshold > 2:
+                minThreshold = i
+                break
+            intensities[i + 1] += intensities[i]
+            intensities[i] = 0
+
+        print(f"min: {minThreshold}, max: {maxThreshold}")
 
         result = np.zeros(self.image.shape)
-        result = (self.image - minThreshold) * (255/(maxThreshold - minThreshold))
+        result = (self.image.astype('float32') - minThreshold) * (255/(maxThreshold - minThreshold))
         result[result > 255] = 255
+        result[result < 0] = 0
         self.windowed = Img(result.astype('uint8'))
         return result.astype('uint8')
 
