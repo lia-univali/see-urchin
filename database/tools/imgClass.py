@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from os import path, makedirs
 import numpy as np
 import cv2
 
@@ -14,7 +15,6 @@ class Img:
     def BGRToGray(self):
         image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.image = image
-        return image
 
     #---Blur---#
     def blur(self, ksize = (3, 3)):
@@ -49,7 +49,6 @@ class Img:
     def grayToBGR(self):
         image = cv2.cvtColor(self.image, cv2.COLOR_GRAY2BGR)
         self.image = image
-        return image
 
     #---Insert Border---#
     def insertBorder(self, top, bottom, left, right, borderType):
@@ -157,9 +156,12 @@ class Img:
         plot.bar(intervals, intensities, align = "edge", width = 0.3)
 
     #---Write Each Object---#
-    def writeEachObject(self, originalImage, path = "", initialValue = 0):
+    def writeEachObject(self, originalImage, csvFile, pathName, initialValue = 0):
         initialCounterValue = initialValue
         counter = initialCounterValue
+        if not path.exists(pathName + "/img"):
+            makedirs(pathName + "/img")
+
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
@@ -167,15 +169,21 @@ class Img:
             nH = h//5
             img = cv2.copyMakeBorder(originalImage, nH, nH, nW, nW, cv2.BORDER_CONSTANT, value=255)
             img = img[y:y + h + nH * 2, x:x + w + nW * 2]
-            filename = path + "/" + str(counter) + ".png"
+            filename = pathName + "/img/" + str(counter) + ".png"
             cv2.imshow(f"Save?", img)
-            if(cv2.waitKey(0) == 115):
+            key = cv2.waitKey(0)
+            if(key == 115 or key == 100):
                 cv2.imwrite(filename, cv2.resize(img, (64, 64)))
-                print(f"Saved {filename}.png")
+                print(f"Saved {filename};")
                 counter += 1
+                if(key == 115):
+                    csvFile.write(f"{filename},1\n")
+                else:
+                    csvFile.write(f"{filename},0\n")
             else:
                 print("---Did not save picture---")
         print(f"Successfully saved {counter - initialCounterValue} images ", end="")
+        return counter
 
     #---Write Objects---#
     def writeObjects(self, originalImage, path = "", initialValue = 0):
@@ -198,32 +206,26 @@ class Img:
     #---Get Inverted---#
     def getInverted(self):
         inverted = cv2.bitwise_not(self.image)
-        self.inverted = Img(inverted)
-        return inverted
+        return Img(inverted)
 
     #---Get Blurred---#
     def getBlurred(self, ksize = (3, 3)):
         blurred = cv2.blur(self.image, ksize)
-        self.blurred = Img(blurred)
-        return blurred
+        return Img(blurred)
 
     #---get Channels---#
     def getChannels(self):
-        self.channelB = Img(self.image[:, :, 0])
-        self.channelG = Img(self.image[:, :, 1])
-        self.channelR = Img(self.image[:, :, 2])
+        return Img(self.image[:, :, 0]), Img(self.image[:, :, 1]), Img(self.image[:, :, 2])
 
     #---Get Gaussian Blurred---#
     def getGuaussianBlurred(self, ksize = (5, 5), sigma = 3):
         gaussBlurred = cv2.GaussianBlur(self.image, ksize, sigma)
-        self.gaussBlurred = Img(gaussBlurred)
-        return gaussBlurred
+        return Img(gaussBlurred)
 
     #---Get Laplacian---#
     def getLaplacian(self):
         laplacian = cv2.Laplacian(self.image, -1)
-        self.laplacian = Img(laplacian)
-        return laplacian
+        return Img(laplacian)
 
     #---Get Sepia---#
     def getSepia(self):
@@ -233,45 +235,39 @@ class Img:
         sepia[:, :, 2] = img[:, :, 0] * 0.272 + img[:, :, 1] * 0.534 + img[:, :, 2] * 0.131
         sepia[:, :, 0] = img[:, :, 0] * 0.393 + img[:, :, 1] * 0.769 + img[:, :, 2] * 0.189
         sepia[sepia > 255] = 255
-        self.sepia = Img(sepia.astype('uint8'))
-        return sepia.astype('uint8')
+        return Img(sepia.astype('uint8'))
 
     #---Get Sobel---#
     def getSobel(self):
         sobel = cv2.add(cv2.Sobel(self.image, -1, 0, 1), cv2.Sobel(self.image, -1, 1, 0))
-        self.sobel = Img(sobel)
-        return sobel
+        return Img(sobel)
 
     #---Get Canny---#
     def getCanny(self, min, max):
         canny = cv2.Canny(self.image, min, max)
-        self.canny = Img(canny)
-        return canny
+        return Img(canny)
 
     #---Get Binary---#
     def getBinary(self, limit = 1):
         binary = self.image
         binary[binary >= limit] = 255
         binary[binary < limit] = 0
-        self.binary = Img(binary)
-        return binary
+        return Img(binary)
 
     #---Get Binary BGR---#
     def getBinaryBGR(self, limitB = 1, limitG = 1, limitR = 1):
         binaryB = self.image[:, :, 0]
         binaryB[binaryB >= limitB] = 255
         binaryB[binaryB < limitB] = 0
-        self.binaryB = Img(binaryB)
 
         binaryG = self.image[:, :, 1]
         binaryG[binaryG >= limitG] = 255
         binaryG[binaryG < limitG] = 0
-        self.binaryG = Img(binaryG)
 
         binaryR = self.image[:, :, 2]
         binaryR[binaryR >= limitR] = 255
         binaryR[binaryR < limitR] = 0
-        self.binaryR = Img(binaryR)
+        return Img(binaryB), Img(binaryG), Img(binaryR)
 
     #---Get Windowed---#
     def getWindowed(self):
@@ -299,14 +295,11 @@ class Img:
             intensities[i + 1] += intensities[i]
             intensities[i] = 0
 
-        print(f"min: {minThreshold}, max: {maxThreshold}")
-
         result = np.zeros(self.image.shape)
         result = (self.image.astype('float32') - minThreshold) * (255/(maxThreshold - minThreshold))
         result[result > 255] = 255
         result[result < 0] = 0
-        self.windowed = Img(result.astype('uint8'))
-        return result.astype('uint8')
+        return Img(result.astype('uint8'))
 
 
 class Image:

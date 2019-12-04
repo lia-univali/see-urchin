@@ -2,32 +2,36 @@ import matplotlib.pyplot as plt
 import numpy as np
 from imgClass import *
 import cv2
+from os import path, makedirs
 import sys
 sys.setrecursionlimit(10**6)
 
 def removeBinary(filename, threshold):
     img = Image(filename)
-    img.gray.show(221)
-    img.gray.getWindowed()
-    img.gray.windowed.show(222)
-    img.gray.windowed.getBinary(threshold)
-    img.gray.windowed.binary.invert()
-    img.gray.windowed.binary.show(223)
-    img.gray.windowed.binary.floodFill()
-    while(img.gray.windowed.binary.checkForRemovableObjects()):
-        img.gray.windowed.binary.removeObjectsBySize()
-    img.gray.windowed.binary.show(224)
-    plt.show()
-    return Img(img.gray.windowed.binary.image)
+    img = img.gray.getWindowed()
+    img = img.getBinary(threshold)
+    img.invert()
+    img.floodFill()
+    while(img.checkForRemovableObjects()):
+        img.removeObjectsBySize()
+    return img.image
 
-filename = "../../LARVAS_4.jpg"
+filename = ["../../LARVAS_1.jpg", 
+            "../../LARVAS_2.jpg",
+            "../../LARVAS_3.jpg",
+            "../../LARVAS_4.jpg"]
 
-original = cv2.imread(filename)
+pathName = path.dirname(path.realpath(__file__)) + "/" + input("Type the path in which the images will be saved: ")
 
-sum1 = removeBinary(filename, 50)
-sum2 = removeBinary(filename, 25)
-result = Img(cv2.add(sum1.image, sum2.image))
-
-result.writeEachObject(cv2.cvtColor(original, cv2.COLOR_BGR2GRAY), "niggabean", 0)
-print(f"from {filename}.")
-plt.show()
+if not path.exists(pathName):
+    makedirs(pathName)
+counter = 0
+csvFile = open(pathName + "/train.csv", 'w+')
+csvFile.write("image_path,class\n")
+for name in filename:
+    print(f"Loading {name}...")
+    original = cv2.imread(name)
+    result = Img(cv2.add(removeBinary(name, 50), removeBinary(name, 25)))
+    counter = result.writeEachObject(cv2.cvtColor(original, cv2.COLOR_BGR2GRAY), csvFile, pathName, counter)
+    cv2.destroyAllWindows()
+    print(f"from {name}.")
