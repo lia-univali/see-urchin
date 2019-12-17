@@ -7,29 +7,30 @@ sys.setrecursionlimit(10**6)
 
 def removeBinary(filename, threshold, showPos):
     img = Image(filename)
-    img.gray.getWindowed()
-    img.gray.windowed.getBinary(threshold)
-    #img.gray.windowed.binary.dilate()
-    img.gray.windowed.binary.invert()
-    img.gray.windowed.binary.floodFill()
-    while img.gray.windowed.binary.checkForRemovableObjects(0, 4000):
-        img.gray.windowed.binary.removeObjectsBySize(0, 4000)
-    img.gray.windowed.binary.show(showPos)
-    return Img(img.gray.windowed.binary.image)
+    img.gray.window()
+    img.gray.binary(threshold)
+    img.gray.invert()
+    img.gray.floodFill()
+    if(img.gray.image.shape[0] > 1000 and img.gray.image.shape[1] > 1000):
+        img.gray.erode()
+    while(img.gray.checkForRemovableObjects()):
+        img.gray.removeObjectsBySize()
+    img.gray.show(showPos)
+    return img.gray.image
 
-filename = "LARVAS_1.jpg"
 
-original = cv2.imread(filename)
+filename = ["LARVAS_1.jpg", "LARVAS_2.jpg", "LARVAS_3.jpg", "LARVAS_4.jpg"]
 
-showImage(cv2.imread(filename), 311)
-sum1 = removeBinary(filename, 80, 323)
-sum2 = removeBinary(filename, 40, 324)
-result = Img(cv2.add(sum1.image, sum2.image))
-result.show(313)
-plt.show()
+for i in range(len(filename)):
+    original = cv2.imread(filename[i])
+    showImage(cv2.imread(filename[i]), 311)
+    result = Img(cv2.add(removeBinary(filename[i], 50, 323), removeBinary(filename[i], 20, 324)))
+    result.show(313)
+    plt.show()
 
-showImage(original, 121)
-print(f"There are {result.markObjects(original, [255, 0, 0])} larvae")
-showImage(original, 122)
+    showImage(original, 121)
+    counter = result.markObjects(original, [255, 0, 0])
+    showImage(original, 122)
 
-plt.show()
+    #plt.show()
+    print(f"There are {counter} larvae in {filename[i]}")

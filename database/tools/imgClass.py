@@ -170,6 +170,8 @@ class Img:
             img = cv2.copyMakeBorder(originalImage, nH, nH, nW, nW, cv2.BORDER_CONSTANT, value=255)
             img = img[y:y + h + nH * 2, x:x + w + nW * 2]
             filename = pathName + "/img/" + str(counter) + ".png"
+            cv2.namedWindow(f"Save?")
+            cv2.resizeWindow(f"Save?", 256, 256)
             cv2.imshow(f"Save?", img)
             key = cv2.waitKey(0)
             if(key == 115 or key == 100):
