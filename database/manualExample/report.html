@@ -1,0 +1,552 @@
+
+    <!DOCTYPE html>
+    <style>
+        html {
+            padding: 0px;
+            margin: 0px;
+        }
+        body {
+            width: 80%;
+            margin: auto;
+            background-color: #ffffdd;
+        }
+        #title {
+            height: 64px;
+            width: 100%;
+            text-align: center;
+            font-family: Arial;
+            font-size: 52;
+            text-shadow: 0px 0px 3px;
+            padding: 5px 25px 5px 25px;
+        }
+        #bigPicture {
+            box-shadow: 0px 0px 10px 2px;
+            display: inline-block;  /*307px     full height: 1536px */
+            width: 39%; /* 409px      full width: 2048 */
+            margin: 100px 5% 50px 5%;
+        }
+        #imageAndInfoBar {
+            background-color: aqua;
+            display: block;
+            height: 100px;
+            width: 100%;
+            padding: 0px 0px 20px 0px;
+        }
+        #imgBase {
+            background-color: black;
+            position: relative;
+            display:inline-block;
+            top: 15%;
+            padding: 0px;
+            margin: 0px 0px 10px 10px;
+            height: 64px;
+            width: 64px;
+        }
+        #imgBase:hover #tinyPicture {
+            opacity: 0.8;
+        }
+        #imgBase:hover #infoTextBox {
+            z-index: 5;
+            padding: 5px 0px 0px 10px;
+            position: absolute;
+            display: inline-block;
+            height: 80px;
+            width: 200px;
+        }
+        #tinyPicture {
+            box-shadow: 0px 0px 10px 2px;
+            width: 64px;
+            height: 64px;
+        }
+        #infoTextBox {
+            font-family: Arial, Helvetica, sans-serif;
+            display: none;
+            height: 90%;
+            width: 90%;
+            position: relative;
+            top: 15%;
+            background-color: #ccc;
+            opacity: 0.8;
+        }
+        #imageInfo {
+            position: relative;
+            margin: 0px;
+        }
+    </style>
+    <body>
+        <h1 id="title">
+            Larvae Identification Process Report
+        </h1>
+    
+    <img src="../../img/LARVAS_1.jpg" id="bigPicture">
+    
+    <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/markedImage0.png" id="bigPicture">
+    <br>
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/0.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #1: </p>
+            <p id="imageInfo"> Position: (152, 1392); </p>
+            <p id="imageInfo"> Width: 197, Height: 144; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/1.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #2: </p>
+            <p id="imageInfo"> Position: (717, 1349); </p>
+            <p id="imageInfo"> Width: 141, Height: 135; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/2.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #3: </p>
+            <p id="imageInfo"> Position: (1377, 1144); </p>
+            <p id="imageInfo"> Width: 139, Height: 136; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/3.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #4: </p>
+            <p id="imageInfo"> Position: (388, 1015); </p>
+            <p id="imageInfo"> Width: 116, Height: 130; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/4.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #5: </p>
+            <p id="imageInfo"> Position: (756, 962); </p>
+            <p id="imageInfo"> Width: 100, Height: 115; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/5.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #6: </p>
+            <p id="imageInfo"> Position: (876, 858); </p>
+            <p id="imageInfo"> Width: 156, Height: 170; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/6.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #7: </p>
+            <p id="imageInfo"> Position: (1024, 689); </p>
+            <p id="imageInfo"> Width: 123, Height: 121; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/7.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #8: </p>
+            <p id="imageInfo"> Position: (1663, 609); </p>
+            <p id="imageInfo"> Width: 116, Height: 144; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/8.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #9: </p>
+            <p id="imageInfo"> Position: (1057, 572); </p>
+            <p id="imageInfo"> Width: 119, Height: 103; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/9.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #10: </p>
+            <p id="imageInfo"> Position: (788, 550); </p>
+            <p id="imageInfo"> Width: 74, Height: 79; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/10.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #11: </p>
+            <p id="imageInfo"> Position: (1420, 544); </p>
+            <p id="imageInfo"> Width: 75, Height: 76; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/11.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #12: </p>
+            <p id="imageInfo"> Position: (614, 500); </p>
+            <p id="imageInfo"> Width: 117, Height: 132; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/12.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #13: </p>
+            <p id="imageInfo"> Position: (1185, 465); </p>
+            <p id="imageInfo"> Width: 121, Height: 95; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/13.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #14: </p>
+            <p id="imageInfo"> Position: (866, 337); </p>
+            <p id="imageInfo"> Width: 140, Height: 105; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/14.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #15: </p>
+            <p id="imageInfo"> Position: (1027, 250); </p>
+            <p id="imageInfo"> Width: 150, Height: 125; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/15.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #16: </p>
+            <p id="imageInfo"> Position: (1174, 232); </p>
+            <p id="imageInfo"> Width: 100, Height: 136; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/16.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #17: </p>
+            <p id="imageInfo"> Position: (203, 205); </p>
+            <p id="imageInfo"> Width: 117, Height: 154; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/17.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #18: </p>
+            <p id="imageInfo"> Position: (1460, 197); </p>
+            <p id="imageInfo"> Width: 134, Height: 137; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/18.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #19: </p>
+            <p id="imageInfo"> Position: (1100, 100); </p>
+            <p id="imageInfo"> Width: 137, Height: 78; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/19.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #20: </p>
+            <p id="imageInfo"> Position: (1473, 25); </p>
+            <p id="imageInfo"> Width: 112, Height: 100; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    <br>
+    <img src="../../img/LARVAS_2.jpg" id="bigPicture">
+    
+    <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/markedImage1.png" id="bigPicture">
+    <br>
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/20.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #21: </p>
+            <p id="imageInfo"> Position: (1406, 1390); </p>
+            <p id="imageInfo"> Width: 110, Height: 91; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/21.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #22: </p>
+            <p id="imageInfo"> Position: (956, 1338); </p>
+            <p id="imageInfo"> Width: 83, Height: 78; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/22.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #23: </p>
+            <p id="imageInfo"> Position: (594, 1132); </p>
+            <p id="imageInfo"> Width: 103, Height: 105; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/23.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #24: </p>
+            <p id="imageInfo"> Position: (1553, 1123); </p>
+            <p id="imageInfo"> Width: 120, Height: 128; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/24.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #25: </p>
+            <p id="imageInfo"> Position: (1683, 1070); </p>
+            <p id="imageInfo"> Width: 105, Height: 93; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/25.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #26: </p>
+            <p id="imageInfo"> Position: (1117, 1062); </p>
+            <p id="imageInfo"> Width: 85, Height: 90; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/26.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #27: </p>
+            <p id="imageInfo"> Position: (392, 986); </p>
+            <p id="imageInfo"> Width: 101, Height: 118; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/27.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #28: </p>
+            <p id="imageInfo"> Position: (179, 950); </p>
+            <p id="imageInfo"> Width: 88, Height: 103; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/28.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #29: </p>
+            <p id="imageInfo"> Position: (668, 873); </p>
+            <p id="imageInfo"> Width: 88, Height: 90; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/29.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #30: </p>
+            <p id="imageInfo"> Position: (1185, 847); </p>
+            <p id="imageInfo"> Width: 102, Height: 89; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/30.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #31: </p>
+            <p id="imageInfo"> Position: (794, 816); </p>
+            <p id="imageInfo"> Width: 109, Height: 117; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/31.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #32: </p>
+            <p id="imageInfo"> Position: (107, 659); </p>
+            <p id="imageInfo"> Width: 105, Height: 104; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/32.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #33: </p>
+            <p id="imageInfo"> Position: (782, 578); </p>
+            <p id="imageInfo"> Width: 94, Height: 96; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/33.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #34: </p>
+            <p id="imageInfo"> Position: (1589, 545); </p>
+            <p id="imageInfo"> Width: 106, Height: 103; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/34.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #35: </p>
+            <p id="imageInfo"> Position: (1712, 524); </p>
+            <p id="imageInfo"> Width: 103, Height: 100; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/35.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #36: </p>
+            <p id="imageInfo"> Position: (1114, 510); </p>
+            <p id="imageInfo"> Width: 94, Height: 93; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/36.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #37: </p>
+            <p id="imageInfo"> Position: (1604, 322); </p>
+            <p id="imageInfo"> Width: 98, Height: 100; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/37.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #38: </p>
+            <p id="imageInfo"> Position: (1144, 158); </p>
+            <p id="imageInfo"> Width: 105, Height: 103; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/38.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #39: </p>
+            <p id="imageInfo"> Position: (1120, 0); </p>
+            <p id="imageInfo"> Width: 99, Height: 64; </p>
+            <p id="imageInfo"> Evolution stage: Egg. </p>
+        </div>
+    </div>
+    <br>
+    <img src="../../img/LARVAS_3.jpg" id="bigPicture">
+    
+    <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/markedImage2.png" id="bigPicture">
+    <br>
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/39.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #40: </p>
+            <p id="imageInfo"> Position: (1547, 1261); </p>
+            <p id="imageInfo"> Width: 170, Height: 112; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/40.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #41: </p>
+            <p id="imageInfo"> Position: (962, 1048); </p>
+            <p id="imageInfo"> Width: 127, Height: 144; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/41.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #42: </p>
+            <p id="imageInfo"> Position: (1516, 930); </p>
+            <p id="imageInfo"> Width: 121, Height: 154; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/42.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #43: </p>
+            <p id="imageInfo"> Position: (822, 474); </p>
+            <p id="imageInfo"> Width: 106, Height: 153; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/43.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #44: </p>
+            <p id="imageInfo"> Position: (1132, 348); </p>
+            <p id="imageInfo"> Width: 103, Height: 166; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/44.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #45: </p>
+            <p id="imageInfo"> Position: (364, 345); </p>
+            <p id="imageInfo"> Width: 170, Height: 136; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    
+    <div id="imgBase">
+        <img src="C:\Users\davip\Davi\Programming\Python\windowsSeeUrchin\database\tools/../manualExample/img/45.png" id="tinyPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> Larvae #46: </p>
+            <p id="imageInfo"> Position: (1641, 0); </p>
+            <p id="imageInfo"> Width: 119, Height: 126; </p>
+            <p id="imageInfo"> Evolution stage: Larvae. </p>
+        </div>
+    </div>
+    <br>

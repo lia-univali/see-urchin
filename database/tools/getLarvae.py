@@ -1,87 +1,88 @@
 import numpy as np
 from imgClass import *
 from report import *
+from larvaeFunc import *
 import cv2
 from os import path, makedirs
 
-def removeBinaryRelative(filename):
-    img = Image(filename)
-    img.gray.window()
-    thresh = img.gray.getRelativeThreshold()
-    img.gray.binary(thresh * 1.1)
-    img.gray.invert()
-    img.gray.floodFill()
-    if(img.gray.image.shape[0] > 1000 and img.gray.image.shape[1] > 1000):
-        img.gray.erode()
-    return img.gray.image
+def processLarvae(filename):
+    return Img(cv2.bitwise_and(processLarvaeHard(filename), processLarvaeSoft(filename)))
 
-def removeBinary(filename):
-    img = Image(filename)
-    img.gray.window()
-    img.gray.binary(10)
-    img.gray.invert()
-    img.gray.close((10, 10))
-    img.gray.dilate((15, 15))
-    return img.gray.image
+if __name__ == "__main__":
+    filename = ["../../img/LARVAS_1.jpg", 
+                "../../img/LARVAS_2.jpg",
+                "../../img/LARVAS_3.jpg"]
 
-filename = ["../../img/LARVAS_1.jpg", 
-            "../../img/LARVAS_2.jpg",
-            "../../img/LARVAS_3.jpg"]
+    #-Getting an array of images to be processed and an array of images to be marked-#
+    imageArray = getImagesFromArray(filename)
+    markedImagesArray = getImagesFromArray(filename)
 
-pathName = path.dirname(path.realpath(__file__)) + "/../" + input("Type the folder in which the images will be saved: ")
+    #-Creating a folder, in which everything will be saved, one folder above the script-#
+    pathName = path.dirname(path.realpath(__file__)) + "/../" + input("Type the folder in which the images will be saved: ")
+    if not path.exists(pathName):
+        makedirs(pathName)
 
-if not path.exists(pathName):
-    makedirs(pathName)
-counter = 0
+    #-Declaring the csv file and creating the HTML report-#
+    csv = None
+    htmlFile = open(pathName + "/report.html", 'a+')
 
-csvFileTrain = open(pathName + "/train.csv", 'w+')
-csvFileTrain.write("image_path,class\n")
-
-csvFilePredict = open(pathName + "/predict.csv", 'w+')
-csvFilePredict.write("image_path,class\n")
-
-htmlFile = open(pathName + "/report.html", 'a+')
-beginHTML(htmlFile)
-
-choice = ""
-while(choice.upper() != "Q" and choice.upper() != "S"):
-    choice = input("Choose between (Q)uick and (S)low mode: ")
-
-markedImagesCounter = 0
-
-for name in filename:
-    #---Begginning the HTML File---#
-    makeHTMLBigPicture(htmlFile, name)
-
-    #---Declaring the Image Variables---#
-    grayImage = cv2.cvtColor(cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR)
-    picToBeMarked = cv2.imread(name)
-
-    #---Image Processing Sequence---#
-    result = Img(cv2.bitwise_and(removeBinary(name), removeBinaryRelative(name)))
-    while(result.checkForRemovableObjects()):
-        result.removeObjectsBySize(0, 25)
-    larvaeArray = result.getObjectInfo()
+    #-Asking for user's choice on the saving method-#
+    choice = ""
+    while(choice.upper() != "A" and choice.upper() != "M"):
+        choice = input("Choose between (A)utomatic and (M)anual mode: ")
+    if(choice.upper() == "M"):
+        print("Press \"D\" to save as Larvae;\nPress\"S\" to save as Egg;\nPress any other key to not save.")
     
-    #---Marking the Image and Inserting it in the HTML File---#
-    result.markObjects(picToBeMarked, [0, 0, 255])
-    cv2.imwrite(f"{pathName}/markedImage{markedImagesCounter}.png", picToBeMarked)
-    makeHTMLBigPicture(htmlFile, f"{pathName}/markedImage{markedImagesCounter}.png")
-    markedImagesCounter += 1
-    htmlFile.write("<br>")
+    #-Initializes the array in which the larvaes' informations will be stored-#
+    larvaeArray = []
 
-    #---Inserting the Larvae in the HTML File---#
-    for i in range(len(larvaeArray)):
-        makeHTMLBar(htmlFile, f"img/{counter+i}.png", larvaeArray[i], i + counter)
-    htmlFile.write("<br>")
+    #---Image processing---#
+    for i in range(len(imageArray)):
+        print(f"Processing {filename[i]}...")
+        result = processLarvae(filename[i])
+        while(result.checkForRemovableObjects()):
+            result.removeObjectsBySize(0, 25)
 
-    #---Saving the Laevae Images---#
-    if(choice.upper() == "Q"):
-        counter = result.writeObjects(cv2.cvtColor(grayImage, cv2.COLOR_BGR2GRAY), csvFileTrain, csvFilePredict, pathName, counter)
-    else:  
-        counter = result.writeEachObject(cv2.cvtColor(grayImage, cv2.COLOR_BGR2GRAY), csvFileTrain, csvFilePredict, pathName, counter)
+        #-Getting the number of larvaes in each image-#
+        imageArray[i].numberOfLarvae -= len(larvaeArray)
+        #-Getting the larvaes' positions and sizes-#
+        larvaeArray += getLarvaeInfo(result.image, imageArray[i].image)
+        imageArray[i].numberOfLarvae += len(larvaeArray)
 
-    cv2.destroyAllWindows()
+        #-Creating the marked image-#
+        result.markObjects(markedImagesArray[i].image, [0, 0, 255])
+        cv2.imwrite(f"{pathName}/markedImage{i}.png", markedImagesArray[i].image)
 
-endHTML(htmlFile)
-print("Done!")
+    #---Creating img folder---#
+    if not path.exists(pathName + "/img"):
+        makedirs(pathName + "/img")
+
+    #---Saving the images in the way the user wants---#
+    if(choice.upper() == "A"):
+        print("Saving Images...")
+        for i in range(len(larvaeArray)):
+            cv2.imwrite(f"{pathName}/img/{i}.png", larvaeArray[i].image)
+    else:
+        print("Saving Images...")
+        csv = CSV(pathName)
+        #-Saves images and gathers the evolutionary stage according to the user's input-#
+        for i in range(len(larvaeArray)):
+            larvaeArray[i].evolStage = saveWithChoice(f"{pathName}/img/{i}.png", larvaeArray[i].image, csv)
+
+    #---Creating the HTML file---#
+    print("Creating HTML File...")
+    HTMLbegin(htmlFile)
+    larvaeNameOffset = 0
+    for i in range(len(imageArray)):
+        #-Inserts the original and marked images in the HTML file-#
+        HTMLBigPicture(htmlFile, filename[i])
+        HTMLBigPicture(htmlFile, f"{pathName}/markedImage{i}.png")
+        HTMLlineBreak(htmlFile)
+        if(i > 0):
+            larvaeNameOffset += imageArray[i-1].numberOfLarvae
+        #-Inserts each larvaes' image in the HTML file-#
+        for j in range(imageArray[i].numberOfLarvae):
+            HTMLBar(htmlFile, f"{pathName}/img/{j + larvaeNameOffset}.png", larvaeArray[j + larvaeNameOffset], j + 1 + larvaeNameOffset)
+        HTMLlineBreak(htmlFile)
+
+    print("Done!")
