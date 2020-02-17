@@ -315,6 +315,7 @@ def toBGR(image):
     return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
 
 def toGray(image):
+    result = image
     return cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
 
 def showImage(image, pos = 111, title = "", effect = None):

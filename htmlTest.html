@@ -19,22 +19,31 @@
             padding: 5px 25px 5px 25px;
         }
         #bigPictureBase {
-            background-color: black;
             position: relative;
             display: inline-block;
             padding: 0px 0px 0px 0px;
             margin: 0px 5% 50px 5%;
-            width: 100%;
-            height: auto;
+            width: 39%;
+            max-height: 1000px;
         }
         #bigPictureBase:hover #bigPicture {
-            opacity: 0.8;
+            filter: brightness(0.8);
+            z-index: 3;
+        }
+        #bigPictureBase:hover #infoTextBox {
+            z-index: 2;
+            padding: 5px 0px 0px 10px;
+            position: absolute;
+            display: inline-block;
+            max-height: 80px;
+            max-width: 200px;
         }
         #bigPicture {
+            background-color: black;
             box-shadow: 0px 0px 10px 2px;
-            display: inline-block;  /*307px     full height: 1536px */
-            width: 39%; /* 409px      full width: 2048 */
-            margin: 0px 5% 0px 5%;
+            display: inline-block;
+            width: 100%;
+            height: auto;
         }
         #imageAndInfoBar {
             background-color: aqua;
@@ -65,6 +74,7 @@
             width: 200px;
         }
         #tinyPicture {
+            position: relative;
             box-shadow: 0px 0px 10px 2px;
             width: 64px;
             height: 64px;
@@ -72,16 +82,18 @@
         #infoTextBox {
             font-family: Arial, Helvetica, sans-serif;
             display: none;
-            height: 90%;
-            width: 90%;
             position: relative;
             top: 15%;
             background-color: #ccc;
             opacity: 0.8;
+            white-space: nowrap;
+            padding: 0px;
+            width: 200px;
+            height: 80px;
         }
         #imageInfo {
             position: relative;
-            margin: 0px;
+            margin: 0px 10px 0px 0px;
         }
     </style>
     <body>
@@ -90,11 +102,17 @@
         </h1>
     <div id="bigPictureBase">
         <img src="img/LARVAS_1.jpg" id="bigPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> There are 20 larvae </p>
+            <p id="imageInfo"> in this image. </p>
+        </div>
+    </div>
+    <div id="bigPictureBase">
         <img src="img/LARVAS_1.jpg" id="bigPicture">
     </div>
     <br>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -103,7 +121,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -112,7 +130,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -121,7 +139,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -130,7 +148,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -139,7 +157,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -148,7 +166,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -157,7 +175,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -166,7 +184,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -175,7 +193,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -184,7 +202,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -193,7 +211,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -202,7 +220,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -211,7 +229,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -220,7 +238,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -229,7 +247,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -238,7 +256,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -247,7 +265,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -256,7 +274,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -265,7 +283,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -274,7 +292,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -283,7 +301,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -292,7 +310,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -301,7 +319,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -310,7 +328,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -319,7 +337,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -328,7 +346,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -337,7 +355,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -346,7 +364,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -355,7 +373,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -364,7 +382,7 @@
         </div>
     </div>
     <div id="imgBase">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>
@@ -374,7 +392,7 @@
     </div>
     <img src="img/LARVAS_1.jpg" id="bigPicture">
     <div id="imageAndInfoBar">
-        <img src="IMGPESQ_1.png" id="tinyPicture">
+        <img src="img/LARVAS_2.jpg" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #1: </p>
             <p id="imageInfo"> Position: (xxx, xxx); </p>

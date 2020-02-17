@@ -46,7 +46,7 @@ if __name__ == "__main__":
         #-Getting the number of larvaes in each image-#
         imageArray[i].numberOfLarvae -= len(larvaeArray)
         #-Getting the larvaes' positions and sizes-#
-        larvaeArray += getLarvaeInfo(result.image, imageArray[i].image)
+        larvaeArray += getLarvaeInfo(result.image, imageArray[i].image, i)
         imageArray[i].numberOfLarvae += len(larvaeArray)
 
         #-Creating the marked image-#
@@ -59,9 +59,24 @@ if __name__ == "__main__":
 
     #---Saving the images in the way the user wants---#
     if(choice.upper() == "A"):
+        counter = 0
         print("Saving Images...")
         for i in range(len(larvaeArray)):
             cv2.imwrite(f"{pathName}/img/{i}.png", larvaeArray[i].image)
+            currentImage = Img(cv2.imread(f"{pathName}/img/{i}.png", 0))
+            circleArray = cv2.HoughCircles(currentImage.image, cv2.HOUGH_GRADIENT, 1, 64, param1=80, param2=20, minRadius=10, maxRadius=42)
+            currentImage.window()
+            currentImage.binary(currentImage.getRelativeThreshold())
+            currentImage.invert()
+            #-Checking roundness and size to indentify the evolutionary stage-#
+            if(not(circleArray is None) and (22 < circleArray[0, 0, 0] < 44) and (22 < circleArray[0, 0, 1] < 44) and cv2.countNonZero(currentImage.image) < 1100):#1200):
+                counter += 1
+                larvaeArray[i].evolStage = "Egg"
+                imageArray[larvaeArray[i].srcImgIndex].numberOfEggs += 1
+            else: 
+                larvaeArray[i].evolStage = "Larvae"
+                imageArray[larvaeArray[i].srcImgIndex].numberOfAdults += 1
+        print(f"Identified {counter} eggs and {len(larvaeArray) - counter} adults;")
     else:
         print("Saving Images...")
         csv = CSV(pathName)
@@ -69,14 +84,16 @@ if __name__ == "__main__":
         for i in range(len(larvaeArray)):
             larvaeArray[i].evolStage = saveWithChoice(f"{pathName}/img/{i}.png", larvaeArray[i].image, csv)
 
+    
+
     #---Creating the HTML file---#
     print("Creating HTML File...")
     HTMLbegin(htmlFile)
     larvaeNameOffset = 0
     for i in range(len(imageArray)):
         #-Inserts the original and marked images in the HTML file-#
-        HTMLBigPicture(htmlFile, filename[i])
-        HTMLBigPicture(htmlFile, f"{pathName}/markedImage{i}.png")
+        HTMLBigPicture(htmlFile, filename[i], imageArray[i])
+        HTMLBigPicture(htmlFile, f"{pathName}/markedImage{i}.png", imageArray[i])
         HTMLlineBreak(htmlFile)
         if(i > 0):
             larvaeNameOffset += imageArray[i-1].numberOfLarvae

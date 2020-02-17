@@ -10,6 +10,7 @@ class Larvae:
         self.w = w
         self.h = h
         self.image = []
+        self.srcImgIndex = 0
         self.evolStage = "Unknown"
 
 class CSV: 
@@ -23,6 +24,8 @@ class LarvaeImage:
     def __init__(self, filename):
         self.image = cv2.imread(filename)
         self.numberOfLarvae = 0
+        self.numberOfEggs = 0
+        self.numberOfAdults = 0
 
 #---Get Images From Array---#
 def getImagesFromArray(array):
@@ -76,7 +79,7 @@ def saveWithChoice(filename, src, csv):
     return evolStage
 
 #---getObjectInfo---#
-def getLarvaeInfo(binaryImage, srcImage):
+def getLarvaeInfo(binaryImage, srcImage, srcImageFilenameIndex):
     #-Makes an empty array to include the larvaes' info-#
     positions = []
     img = cv2.copyMakeBorder(srcImage, 50, 50, 50, 50, cv2.BORDER_CONSTANT, value=[255, 255, 255])
@@ -87,5 +90,6 @@ def getLarvaeInfo(binaryImage, srcImage):
         larvaeTemp = Larvae(x, y, w, h)
         larvaeTemp.image = img[y:y+h+100, x:x+w+100]
         larvaeTemp.image = cv2.resize(larvaeTemp.image, (64, 64))
+        larvaeTemp.srcImgIndex = srcImageFilenameIndex
         positions.append(larvaeTemp)
     return positions

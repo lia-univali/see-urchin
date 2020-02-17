@@ -20,11 +20,32 @@ def HTMLbegin(htmlFile):
             text-shadow: 0px 0px 3px;
             padding: 5px 25px 5px 25px;
         }
-        #bigPicture {
-            box-shadow: 0px 0px 10px 2px;
-            display: inline-block;  /*307px     full height: 1536px */
-            width: 39%; /* 409px      full width: 2048 */
+        #bigPictureBase {
+            position: relative;
+            display: inline-block;
+            padding: 0px 0px 0px 0px;
             margin: 100px 5% 50px 5%;
+            width: 39%;
+            max-height: 1000px;
+        }
+        #bigPictureBase:hover #bigPicture {
+            filter: brightness(0.8);
+            z-index: 3;
+        }
+        #bigPictureBase:hover #infoTextBox {
+            z-index: 2;
+            padding: 5px 0px 0px 10px;
+            position: absolute;
+            display: inline-block;
+            height: 80px;
+            width: 200px;
+        }
+        #bigPicture {
+            background-color: black;
+            box-shadow: 0px 0px 10px 2px;
+            display: inline-block;
+            width: 100%;
+            height: auto;
         }
         #imageAndInfoBar {
             background-color: aqua;
@@ -42,6 +63,7 @@ def HTMLbegin(htmlFile):
             margin: 0px 0px 10px 10px;
             height: 64px;
             width: 64px;
+            box-shadow: 0px 0px 10px 2px;
         }
         #imgBase:hover #tinyPicture {
             opacity: 0.8;
@@ -55,7 +77,6 @@ def HTMLbegin(htmlFile):
             width: 200px;
         }
         #tinyPicture {
-            box-shadow: 0px 0px 10px 2px;
             width: 64px;
             height: 64px;
         }
@@ -80,14 +101,22 @@ def HTMLbegin(htmlFile):
         </h1>
     ''')
 
-def HTMLBigPicture(htmlFile, pathName):
+def HTMLBigPicture(htmlFile, pathName, imageInfo):
     htmlFile.write(f'''
-    <img src="{pathName}" id="bigPicture">
+    <div id="bigPictureBase">
+        <img src="{pathName}" id="bigPicture">
+        <div id="infoTextBox">
+            <p id="imageInfo"> There are {imageInfo.numberOfLarvae} larvae</p>
+            <p id="imageInfo"> in this image; </p>
+            <p id="imageInfo"> {imageInfo.numberOfEggs} of them are eggs; </p>
+            <p id="imageInfo"> {imageInfo.numberOfAdults} of them are adults. </p>
+        </div>
+    </div>
     ''')
 
 def HTMLBar(htmlFile, imagePath, currentLarvae, larvaeNumber):
     htmlFile.write(f'''
-    <div id="imgBase">
+    <div id=\"imgBase\">
         <img src="{imagePath}" id="tinyPicture">
         <div id="infoTextBox">
             <p id="imageInfo"> Larvae #{larvaeNumber}: </p>
