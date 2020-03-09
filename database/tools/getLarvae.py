@@ -5,8 +5,10 @@ from larvaeFunc import *
 import cv2
 from os import path, makedirs
 
+'''
 def processLarvae(filename):
     return Img(cv2.bitwise_and(processLarvaeHard(filename), processLarvaeSoft(filename)))
+'''
 
 if __name__ == "__main__":
     filename = ["../../img/LARVAS_1.jpg", 
@@ -57,25 +59,34 @@ if __name__ == "__main__":
     if not path.exists(pathName + "/img"):
         makedirs(pathName + "/img")
 
+    for i in range(len(larvaeArray)):
+        #-Getting each larvaes' length-#
+        binaryImageFiltered = removeObjectsSmallerThan(larvaeArray[i].binaryImage, (int(larvaeArray[i].binaryImage.shape[1]) // 3, int(larvaeArray[i].binaryImage.shape[0]) // 3))
+        point1, point2, larvaeArray[i].length = findFarthestPixels(binaryImageFiltered)
+
     #---Saving the images in the way the user wants---#
     if(choice.upper() == "A"):
         counter = 0
         print("Saving Images...")
         for i in range(len(larvaeArray)):
-            cv2.imwrite(f"{pathName}/img/{i}.png", larvaeArray[i].image)
+            cv2.imwrite(f"{pathName}/img/{i}.png", larvaeArray[i].image6464)
             currentImage = Img(cv2.imread(f"{pathName}/img/{i}.png", 0))
             circleArray = cv2.HoughCircles(currentImage.image, cv2.HOUGH_GRADIENT, 1, 64, param1=80, param2=20, minRadius=10, maxRadius=42)
             currentImage.window()
             currentImage.binary(currentImage.getRelativeThreshold())
             currentImage.invert()
+            '''
             #-Checking roundness and size to indentify the evolutionary stage-#
-            if(not(circleArray is None) and (22 < circleArray[0, 0, 0] < 44) and (22 < circleArray[0, 0, 1] < 44) and cv2.countNonZero(currentImage.image) < 1100):#1200):
+            if(not(circleArray is None) and (22 < circleArray[0, 0, 0] < 44) and (22 < circleArray[0, 0, 1] < 44) and cv2.countNonZero(currentImage.image) < 1100):
                 counter += 1
                 larvaeArray[i].evolStage = "Egg"
                 imageArray[larvaeArray[i].srcImgIndex].numberOfEggs += 1
             else: 
                 larvaeArray[i].evolStage = "Larvae"
                 imageArray[larvaeArray[i].srcImgIndex].numberOfAdults += 1
+            if circleArray is not None:
+                print(f"#{i+1}: {larvaeArray[i].evolStage} - {circleArray[0, 0, 0]}x{circleArray[0, 0, 1]} - {circleArray[0, 0, 2]};")
+            ''' 
         print(f"Identified {counter} eggs and {len(larvaeArray) - counter} adults;")
     else:
         print("Saving Images...")
@@ -101,5 +112,6 @@ if __name__ == "__main__":
         for j in range(imageArray[i].numberOfLarvae):
             HTMLBar(htmlFile, f"{pathName}/img/{j + larvaeNameOffset}.png", larvaeArray[j + larvaeNameOffset], j + 1 + larvaeNameOffset)
         HTMLlineBreak(htmlFile)
+    HTMLend(htmlFile)
 
     print("Done!")
