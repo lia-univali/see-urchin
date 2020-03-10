@@ -32,8 +32,10 @@ This file displays the larvae images and their information organizedly.
 
 #### Images
 
-The larvae images must follow this model:  
-<img src="https://i.imgur.com/U60LPum.png" width=200>  
+The larvae images must follow this model:
+
+<img src="https://i.imgur.com/U60LPum.png" width=200>
+
 Any image that doesnt have **dark** larvae on a **bright** background most likely won't work.
 
 ## Dependencies
