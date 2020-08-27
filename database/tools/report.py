@@ -62,7 +62,7 @@ def HTMLbegin(htmlFile):
                 position: absolute;
                 display: inline-block;
                 left: 105%;
-                height: 80px;
+                height: 100px;
                 width: 200px;
             }
             #bigPicture {
@@ -182,7 +182,7 @@ def HTMLBar(htmlFile, imagePath, currentLarvae, larvaeNumber):
             <p id="imageInfo"> Larvae #{larvaeNumber}: </p>
             <p id="imageInfo"> Position: ({currentLarvae.x}, {currentLarvae.y}); </p>
             <p id="imageInfo"> Width: {currentLarvae.w}, Height: {currentLarvae.h}; </p>
-            <p id="imageInfo"> Length: {round((currentLarvae.length / 90) * 100, 2)}µm; </p>
+            <p id="imageInfo"> Length: {currentLarvae.length}px ({round((currentLarvae.length / 90) * 100, 2)}µm); </p>
             <p id="imageInfo"> Evolution stage: {currentLarvae.evolStage}. </p>
         </div>
     </div>
@@ -201,12 +201,12 @@ def HTMLend(htmlFile):
                 <p style=\"display: inline;\"> - Egg; </p>
             </div>
             <footer>
-                <p id="footerInfo">&copy Copyright <a href="https://github.com/DaviPMello27/See_Urchin">See_Urchin</a> Davi Mello</p>
+                <p id="footerInfo">&copy Copyright <a href="https://github.com/lia-univali/See_Urchin">See_Urchin</a> Davi Mello</p>
                 <p id="footerInfo">In colaboration with <a href="https://www.univali.br">Univali - Universidade do Vale de Itajaí</a></p>
                 <a href="https://www.univali.br" style="color: rgba(0, 0, 0, 0)">
                     <img id="footerLogo" src="https://intranet.univali.br/intranet/wireless/ajuda/img/logo.png">
                 </a>
-                <a href="https://github.com/DaviPMello27/See_Urchin" style="color: rgba(0, 0, 0, 0)">
+                <a href="https://github.com/lia-univali/See_Urchin" style="color: rgba(0, 0, 0, 0)">
                     <img id="footerLogo" src="https://i.imgur.com/KpZnbS7.png">
                 </a>
             </footer>

@@ -99,7 +99,14 @@ class Img:
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            cv2.rectangle(dst, (x - w//3, y - h//3), (x + w + w//3, y + h + h//3), color, 5)
+            size = max(w, h)
+            borderSize = size//2
+            cutTop = y - (borderSize * 3 - h)
+            cutBottom = cutTop + size * 2 
+            cutLeft = x - (borderSize * 3 - w)
+            cutRight = cutLeft + size * 2 
+            print(f"w: {cutRight - max(cutLeft, 0)}, h: {cutBottom - max(cutTop, 0)}")
+            cv2.rectangle(dst, (cutLeft, cutTop), (cutRight, cutBottom), color, 5)
 
     #---Open---#
     def open(self, ksize = (20, 20), ktype = cv2.MORPH_ELLIPSE):
@@ -128,19 +135,18 @@ class Img:
         self.borders = [0, 0, 0, 0]
 
     #---Remove Objects by Size---#
-    def removeObjectsBySize(self, areaMin = 0, minPercentOfNonWhite = 20):
+    def removeObjectsBySize(self, minPercentOfNonWhite = 20):
         imgArea = self.image.shape[0]*self.image.shape[1]
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if(areaMin <= cv2.contourArea(cnt) <= imgArea * 0.001 or \
-                (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100) or \
-                h > w*5 or \
-                w > h*5 or \
-                h < self.image.shape[0]*0.05 or \
-                w < self.image.shape[1]*0.05):
+            if((cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100) or \
+                h > w*4 or \
+                w > h*4 or \
+                h < self.image.shape[0]*0.035 or \
+                w < self.image.shape[1]*0.035):
                 self.image[y:y+h, x:x+w] = 0
-            if(w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4):
+            elif(w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4):
                 cv2.floodFill(self.image, np.zeros((self.image.shape[0]+ 2, self.image.shape[1] + 2), dtype='uint8'), (cnt[0][0][0], cnt[0][0][1]), 0)
 
     #---Remove Objects Smaller Than---#
@@ -153,7 +159,6 @@ class Img:
             (x, y, w, h) = cv2.boundingRect(cnt)
             if(w < size[0] or h < size[1]):
                 result[y:y+h, x:x+w] = 0
-                #cv2.rectangle(result, (x, y), (x+w, y+h), 128, 1)
         self.image = result
 
     #---Sepia---#
@@ -200,6 +205,8 @@ class Img:
                 break
             intensities[i - 1] += intensities[i]
             intensities[i] = 0
+
+            #  res = pixel - m * (255/(M-m))
 
         #-Zero now becomes minThreshold and 255 becomes maxThreshold, expanding the light scope-#
         if(minThreshold < minLimit and maxThreshold > maxLimit):
@@ -264,18 +271,17 @@ class Img:
         return cv2.cvtColor(result, cv2.COLOR_BGR2RGB)
 
     #---Check for Removable Objects---#
-    def checkForRemovableObjects(self, areaMin = 0, sizeMax = 500, minPercentOfNonWhite = 20):
+    def checkForRemovableObjects(self, minPercentOfNonWhite = 20):
         contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         imgArea = self.image.shape[0]*self.image.shape[1]
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if(areaMin <= cv2.contourArea(cnt) <= imgArea * 0.001 or \
-                (w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4) or \
+            if(w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4 or \
                 (cv2.countNonZero(self.image[y:y+h, x:x+w]) < h*w*minPercentOfNonWhite/100) or \
-                h > w*5 or \
-                w > h*5 or 
-                h < self.image.shape[0]*0.05 or \
-                w < self.image.shape[1]*0.05):
+                h > w*4 or \
+                w > h*4 or \
+                h < self.image.shape[0]*0.035 or \
+                w < self.image.shape[1]*0.035):
                 return True
         return False
 
@@ -336,6 +342,7 @@ class Img:
 
     #---Write Objects---#
     def writeObjects(self, originalImage, csv, pathName, initialCounterValue = 0):
+        print("what")
         counter = initialCounterValue
         #-Creating an img/ folder-#
         if not path.exists(pathName + "/img"):
@@ -345,11 +352,21 @@ class Img:
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
             #-Adding borders and cutting the objects from the image-#
-            nW, nH = w//5, h//5
-            img = cv2.copyMakeBorder(originalImage, nH, nH, nW, nW, cv2.BORDER_CONSTANT, value=255)
-            img = img[y:y + h + nH * 2, x:x + w + nW * 2]
+            borderSize = max(w//5, h//5)
+            imgSize = max(w, h)
+            img = cv2.copyMakeBorder(
+                originalImage,
+                borderSize,
+                borderSize,
+                borderSize,
+                borderSize,
+                cv2.BORDER_CONSTANT,
+                value=255
+            )
+            img = img[y:y + imgSize + borderSize * 2, x:x + imgSize + borderSize * 2]
             filename = pathName + "/img/" + str(counter) + ".png"
             cv2.imwrite(filename, cv2.resize(img, (64, 64)))
+
             #-Writing in the csv files-#
             csv.train.write(f"{filename},1\n")
             csv.predict.write(f"{filename}\n")
