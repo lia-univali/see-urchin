@@ -32,35 +32,6 @@ class LarvaeImage:
         self.numberOfAdults = 0
         self.larvaes = []
 
-#---Get Images From Array---#
-def getImagesFromArray(array):
-    resultArray = []
-    for i in range(len(array)):
-        resultArray.append(LarvaeImage(array[i]))
-    return resultArray
-
-#---Process Larvae Soft---#
-def processLarvaeSoft(filename):
-    img = Image(filename)
-    img.gray.window()
-    thresh = img.gray.getRelativeThreshold()
-    img.gray.binary(thresh * 1.1)
-    img.gray.invert()
-    img.gray.floodFill()
-    if(img.gray.image.shape[0] > 1000 and img.gray.image.shape[1] > 1000):
-        img.gray.erode()
-    return img.gray.image
-
-#---Process Larvae Hard---#
-def processLarvaeHard(filename):
-    img = Image(filename)
-    img.gray.window()
-    img.gray.binary(10)
-    img.gray.invert()
-    img.gray.close((10, 10))
-    img.gray.dilate((15, 15))
-    return img.gray.image
-
 def processLarvae(filename):
     img = Image(filename)
     nW = img.gray.image.shape[0] // 50
@@ -160,25 +131,3 @@ def saveWithChoice(filename, src, csv):
             evolStage = "Larvae"
         csv.predict.write(f"{filename}\n")
     return evolStage
-
-'''#---getObjectInfo---#
-def getLarvaeInfo(binaryImage, srcImage, srcImageFilenameIndex):
-    #-Makes an empty array to include the larvaes' info-#
-    print("okay it passes through here")
-    positions = []
-    contours, hier = cv2.findContours(binaryImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    for cnt in contours:
-        #-Inserts the position, size, evolutionary stage and image in the array-#
-        (x, y, w, h) = cv2.boundingRect(cnt)
-        imgSize = max(x, y)
-        img = cv2.copyMakeBorder(srcImage, imgSize, imgSize, imgSize, imgSize, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-        binImg = cv2.copyMakeBorder(binaryImage, imgSize, imgSize, imgSize, imgSize, cv2.BORDER_CONSTANT, value=[0, 0, 0])
-        larvaeTemp = Larvae(x, y, w, h)
-        larvaeTemp.image = np.array(img[y:y+imgSize*2, x:x+imgSize*2])
-        #larvaeTemp.image6464 = img[y:y+h+nH*2, x:x+w+nW*2]
-        larvaeTemp.image6464 = img[y:y+h+nH*2, x:x+w+nW*2]
-        larvaeTemp.image6464 = np.array(cv2.resize(larvaeTemp.image6464, (64, 64)))
-        larvaeTemp.binaryImage = np.array(binImg[y:y+h+nH*2, x:x+w+nW*2])
-        larvaeTemp.srcImgIndex = srcImageFilenameIndex
-        positions.append(larvaeTemp)
-    return positions'''

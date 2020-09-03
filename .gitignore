@@ -1,4 +1,4 @@
 __pycache__/
 **/__pycache__/
-**/results/
-**/LARVAS/
+**/input_images/**
+**/results/**
