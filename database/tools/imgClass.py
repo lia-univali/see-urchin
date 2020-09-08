@@ -5,15 +5,6 @@ import math
 import cv2
 from time import time
 
-class Object:
-    def __init__(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.image = []
-        self.info = ""
-
 class Img:
     #======================================INIT=======================================
     def __init__(self, img):
@@ -72,18 +63,6 @@ class Img:
             elif(w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4):
                 cv2.floodFill(self.image, np.zeros((self.image.shape[0]+ 2, self.image.shape[1] + 2), dtype='uint8'), (cnt[0][0][0], cnt[0][0][1]), 0)
 
-    #---Remove Objects Smaller Than---#
-    def removeObjectsSmallerThan(self, size):
-        result = self.image
-        counter = 0
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        for cnt in contours:
-            counter += 1
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            if(w < size[0] or h < size[1]):
-                result[y:y+h, x:x+w] = 0
-        self.image = result
-
     #============================TOOLS============================
     #------------Functions that do not alter the image------------
 
@@ -114,7 +93,7 @@ class Image:
             self.gray = Img(cv2.cvtColor(self.original.image, cv2.COLOR_BGR2GRAY))
         except:
             print("\nAn error has occurred while loading the image.")
-            print(" - Check if the image is located in database/input_images.")
+            print(" - Check if the image is located in database/input.")
             print(" - Check if the image is named \"0 ([any number]).jpg\".")
             quit()
 
@@ -134,11 +113,4 @@ def getLargestContour(contourArray):
     for i in range(len(contourArray)):
         if(len(contourArray[i]) > len(contourArray[largestContour])):
             largestContour = i
-    return largestContour    
-
-def findFarthestPixels(image):
-    pyrDownImage = cv2.resize(image, (image.shape[1] // 5, image.shape[0] // 5))
-    contours, hier = cv2.findContours(pyrDownImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    largestContour = getLargestContour(contours)
-    maxPoint1, maxPoint2, maxLength = findFarthestPixelsTestingProcess(contours, largestContour)
-    return tuple(maxPoint1*5), tuple(maxPoint2*5), int(maxLength*5)
+    return largestContour

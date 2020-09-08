@@ -8,16 +8,16 @@ import matplotlib.pyplot as pl
 from time import time    
 
 def getLarvae(startImage=0, endImage=1):
-    #-Creating path-#
-    pathName = path.dirname(path.realpath(__file__)) + "/../results/" + input("Type the folder in which the images will be saved: ")
+    #-Croação do caminho path-#
+    pathName = path.dirname(path.realpath(__file__)) + "/../results/" + input("Digite o arquivo onde as imagens serão salvas: ")
     if not path.exists(pathName):
         makedirs(pathName)
 
-    #---Creating img folder---#
+    #-Criação da pasta img-#
     if not path.exists(pathName + "/img"):
         makedirs(pathName + "/img")
 
-    #-Creating HTML-#
+    #-Criação do HTML-#
     htmlFile = open(pathName + "/report.html", 'a+')
     HTMLbegin(htmlFile)
     
@@ -25,35 +25,35 @@ def getLarvae(startImage=0, endImage=1):
     numberOfLarvaInImage = []
     totalLarvaeCounter = 0
 
-    #-Main loop - Image processing-#
+    #-Loop principal - Processamento de imagem-#
     for imageIndex in range(startImage, endImage):
         #-Image variables declaration-#
-        filename = f"../input_images/0 ({imageIndex+1}).jpg"
+        filename = f"../input/0 ({imageIndex+1}).jpg"
         currentImage = LarvaeImage(filename)
         imageMark = LarvaeImage(filename)
 
-        #-Image processing-#
-        print(f"Processing {filename}...")
+        #-Processamento de imagem-#
+        print(f"Processando {filename}...")
         binaryFiltered = processLarvae(filename)
         while(binaryFiltered.checkForRemovableObjects()):
             binaryFiltered.removeObjectsBySize()        
 
-        #-Larvae counting-#
+        #-Contagem de Larvas-#
         contours, hier = cv2.findContours(binaryFiltered.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         currentImage.numberOfLarvae = len(contours)
 
-        #-Marking and saving marked image-#
+        #-Marcação e salvamento das imagens-#
         binaryFiltered.markObjects(imageMark.image, [0, 0, 255])
         cv2.imwrite(f"{pathName}/markedImage{imageIndex}.jpg", imageMark.image)
         
-        #-Getting larvae's info-#
+        #-Obtenção de informações das larvas-#
         currentImage.larvaes, currentImage.numberOfAdults, currentImage.numberOfEggs = getObjectInfo(contours, binaryFiltered.image, currentImage.image, imageIndex)
 
-        #-Saving Images-#
+        #-Salvamento das Imagens-#
         for i in range(currentImage.numberOfLarvae):
             cv2.imwrite(f"{pathName}/img/{totalLarvaeCounter+i}.jpg", currentImage.larvaes[i].image6464)
         
-        #-Building HTML-#
+        #-Montagem do HTML-#
         HTMLBigPicture(htmlFile, f"../{filename}", currentImage, imageIndex + 1 - startImage)
         HTMLBigPicture(htmlFile, f"{pathName}/markedImage{imageIndex}.jpg", currentImage, imageIndex + 1 - startImage)
         HTMLlineBreak(htmlFile)

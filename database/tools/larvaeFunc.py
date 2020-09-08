@@ -15,14 +15,6 @@ class Larvae:
         self.image = []
         self.image6464 = []
         self.binaryImage = []
-        self.srcImgIndex = 0
-
-class CSV: 
-    def __init__(self, path):
-        self.train = open(path + "/train.csv", 'w+')
-        self.predict = open(path + "/predict.csv", 'w+')
-        self.train.write("image_path,class\n")
-        self.predict.write("image_path,class\n")
 
 class LarvaeImage:
     def __init__(self, filename):
@@ -56,20 +48,35 @@ def getLarvaeLength(binaryImage):
 def getInfoFromContour(contour, binaryImage, srcImage, srcImageFilenameIndex):
     (x, y, w, h) = cv2.boundingRect(contour)
 
-    #Tamanho das bordas nas imagens de proporção variada
-    nW, nH = w//2, h//2
-
     #Tamanho da imagem/bordas nas imagens de proporção 1:1
     imgSize = max(w, h)
     border = imgSize//2
 
-    #Aplicação das bordas na imagem original e binária
-    img = cv2.copyMakeBorder(srcImage, border, border, border, border, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-    binImg = cv2.copyMakeBorder(binaryImage, border, border, border, border, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+    #Aplicação das bordas na imagem original
+    img = cv2.copyMakeBorder(
+        srcImage, 
+        border, 
+        border, 
+        border, 
+        border, 
+        cv2.BORDER_CONSTANT,
+        value=[255, 255, 255]
+    )
 
-    larvaeTemp = Larvae(x, y, w, h)
-    larvaeTemp.image = np.array(img[y:y+h+nH*2, x:x+w+nW*2])
-    larvaeTemp.binaryImage = np.array(binImg[y:y+h+nH*2, x:x+w+nW*2])
+    #Aplicação das bordas na imagem binária
+    binImg = cv2.copyMakeBorder(
+        binaryImage,
+        border,
+        border,
+        border,
+        border,
+        cv2.BORDER_CONSTANT,
+        value=[0, 0, 0]
+    )
+
+    result = Larvae(x, y, w, h)
+    result.image = np.array(img[y:y+h*2, x:x+w*2])
+    result.binaryImage = np.array(binImg[y:y+h*2, x:x+w*2])
 
     #Centralização da larva/Transormação em 1:1
     cutTop = max(y - (imgSize - h), 0)
@@ -77,17 +84,21 @@ def getInfoFromContour(contour, binaryImage, srcImage, srcImageFilenameIndex):
     cutLeft = max(x - (imgSize - w), 0)
     cutRight = cutLeft + imgSize * 2
 
-    larvaeTemp.image6464 = img[cutTop : cutBottom, cutLeft : cutRight]
-    larvaeTemp.image6464 = np.array(cv2.resize(larvaeTemp.image6464, (64, 64)))
+    result.image6464 = img[cutTop : cutBottom, cutLeft : cutRight]
+    result.image6464 = np.array(cv2.resize(result.image6464, (64, 64)))
 
-    larvaeTemp.srcImgIndex = srcImageFilenameIndex
-    binaryImageFiltered = removeObjectsSmallerThan(larvaeTemp.binaryImage, (int(larvaeTemp.binaryImage.shape[1]) // 3, int(larvaeTemp.binaryImage.shape[0]) // 3))
+    #Remove itens pequenos da imagem
+    binaryImageFiltered = removeObjectsSmallerThan(
+        result.binaryImage, 
+        (
+            int(result.binaryImage.shape[1]) // 3,
+            int(result.binaryImage.shape[0]) // 3
+        )
+    )
 
-    larvaeTemp.length = getLarvaeLength(binaryImageFiltered)
-
-    larvaeTemp.evolStage = classifyLarvae(larvaeTemp)
-
-    return larvaeTemp
+    result.length = getLarvaeLength(binaryImageFiltered)
+    result.evolStage = classifyLarvae(result)
+    return result
 
 def getObjectInfo(contours, binaryImage, srcImage, imageArrayIndex):
     larvaeArray = []
@@ -109,25 +120,3 @@ def classifyLarvae(larvae):
         return "Larvae"
     if circleArray is None:
         return "Unknown"
-
-#---saveWithChoice---#
-def saveWithChoice(filename, src, csv):
-    evolStage = ""
-    #-Creates a window showing the image to be saved-#
-    cv2.namedWindow("Save?", cv2.WINDOW_NORMAL)
-    cv2.imshow("Save?", src)
-    cv2.resizeWindow("Save?", 256, 256)
-    #-Waits for user input-#
-    key = cv2.waitKey(0)
-    if(key == 115 or key == 100):
-        cv2.imwrite(filename, src)
-        #-If "S", saves the picture and classifies it as "Egg"-#
-        if(key == 115):
-            csv.train.write(f"{filename},1\n")
-            evolStage = "Egg"
-        #-If "D", saves the picture and classifies it as "Larvae"-#
-        else:
-            csv.train.write(f"{filename},0\n")
-            evolStage = "Larvae"
-        csv.predict.write(f"{filename}\n")
-    return evolStage
