@@ -97,20 +97,23 @@ class Image:
             print(" - Check if the image is named \"0 ([any number]).jpg\".")
             quit()
 
-def removeObjectsSmallerThan(image, size):
-    result = np.array(image)
-    counter = 0
-    contours, hier = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    for cnt in contours:
-        counter += 1
-        (x, y, w, h) = cv2.boundingRect(cnt)
-        if(w < size[0] or h < size[1]):
-            result[y:y+h, x:x+w] = 0
-    return result
+class ImageFunction:
+    @staticmethod
+    def removeObjectsSmallerThan(image, size):
+        result = np.array(image)
+        counter = 0
+        contours, hier = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for cnt in contours:
+            counter += 1
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            if(w < size[0] or h < size[1]):
+                result[y:y+h, x:x+w] = 0
+        return result
 
-def getLargestContour(contourArray):
-    largestContour = 0
-    for i in range(len(contourArray)):
-        if(len(contourArray[i]) > len(contourArray[largestContour])):
-            largestContour = i
-    return largestContour
+    @staticmethod
+    def getLargestContour(contourArray):
+        largestContour = 0
+        for i in range(len(contourArray)):
+            if(len(contourArray[i]) > len(contourArray[largestContour])):
+                largestContour = i
+        return largestContour

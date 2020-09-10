@@ -19,7 +19,7 @@ def getLarvae(startImage=0, endImage=1):
 
     #-Criação do HTML-#
     htmlFile = open(pathName + "/report.html", 'a+')
-    HTMLbegin(htmlFile)
+    HTML.begin(htmlFile)
     
     totalTime = time()
     numberOfLarvaInImage = []
@@ -34,7 +34,7 @@ def getLarvae(startImage=0, endImage=1):
 
         #-Processamento de imagem-#
         print(f"Processando {filename}...")
-        binaryFiltered = processLarvae(filename)
+        binaryFiltered = LarvaeOperation.processLarvae(filename)
         while(binaryFiltered.checkForRemovableObjects()):
             binaryFiltered.removeObjectsBySize()        
 
@@ -47,26 +47,31 @@ def getLarvae(startImage=0, endImage=1):
         cv2.imwrite(f"{pathName}/markedImage{imageIndex}.jpg", imageMark.image)
         
         #-Obtenção de informações das larvas-#
-        currentImage.larvaes, currentImage.numberOfAdults, currentImage.numberOfEggs = getObjectInfo(contours, binaryFiltered.image, currentImage.image, imageIndex)
+        currentImage.larvaes, currentImage.numberOfAdults, currentImage.numberOfEggs = LarvaeOperation.getLarvaeArray(
+            contours,
+            binaryFiltered.image,
+            currentImage.image,
+            imageIndex
+        )
 
         #-Salvamento das Imagens-#
         for i in range(currentImage.numberOfLarvae):
             cv2.imwrite(f"{pathName}/img/{totalLarvaeCounter+i}.jpg", currentImage.larvaes[i].image6464)
         
         #-Montagem do HTML-#
-        HTMLBigPicture(htmlFile, f"../{filename}", currentImage, imageIndex + 1 - startImage)
-        HTMLBigPicture(htmlFile, f"{pathName}/markedImage{imageIndex}.jpg", currentImage, imageIndex + 1 - startImage)
-        HTMLlineBreak(htmlFile)
-        HTMLwrite(htmlFile, "<div>")
+        HTML.bigPicture(htmlFile, f"../{filename}", currentImage, imageIndex + 1 - startImage)
+        HTML.bigPicture(htmlFile, f"{pathName}/markedImage{imageIndex}.jpg", currentImage, imageIndex + 1 - startImage)
+        HTML.lineBreak(htmlFile)
+        HTML.write(htmlFile, "<div>")
         if(currentImage.larvaes is not None):
             for i in range(currentImage.numberOfLarvae):
-                HTMLBar(htmlFile, f"{pathName}/img/{totalLarvaeCounter + i}.jpg", currentImage.larvaes[i], totalLarvaeCounter + 1 + i)
-        HTMLwrite(htmlFile, "</div>")
-        HTMLlineBreak(htmlFile)
+                HTML.bar(htmlFile, f"{pathName}/img/{totalLarvaeCounter + i}.jpg", currentImage.larvaes[i], totalLarvaeCounter + 1 + i)
+        HTML.write(htmlFile, "</div>")
+        HTML.lineBreak(htmlFile)
         
         totalLarvaeCounter += currentImage.numberOfLarvae
 
-    HTMLend(htmlFile)
+    HTML.end(htmlFile)
     print("Done!")
     print(f"It took {round(time() - totalTime, 3)} seconds.")
     return 0
