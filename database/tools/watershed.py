@@ -36,12 +36,13 @@ def watershed(end, nome_arquivo, wait):
 
     markers = cv.watershed(img, markers)
 
-    markers2 = np.array(markers)
+    submarkers = markers[16:48, 16:48]
+    markers2 = np.array(submarkers)
     markers2 = markers2.flatten()
     counter = Counter(markers2)
 
     # buscando segundo valor
-    comum = counter.most_common(5)
+    comum = counter.most_common()
     print(comum)
     valor = comum[0][0]
     if comum[0][0] == 1 or comum[0][0] == -1:
@@ -64,7 +65,4 @@ def watershed(end, nome_arquivo, wait):
         cv.waitKey(0)
 
 
-for arquivo in os.listdir("../images"):
-    print(arquivo)
-    if "jpg" in arquivo:
-        watershed(os.path.abspath("../images/" + arquivo), arquivo, False)
+watershed('11.jpg', "saida11", True)
