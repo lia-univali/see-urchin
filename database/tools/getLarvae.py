@@ -17,6 +17,10 @@ def getLarvae(startImage=0, endImage=1):
     if not path.exists(pathName + "/img"):
         makedirs(pathName + "/img")
 
+    #-Criação da pasta binimg-#
+    if not path.exists(pathName + "/binimg"):
+        makedirs(pathName + "/binimg")
+
     #-Criação do HTML-#
     htmlFile = open(pathName + "/report.html", 'a+')
     HTML.begin(htmlFile)
@@ -57,6 +61,7 @@ def getLarvae(startImage=0, endImage=1):
         #-Salvamento das Imagens-#
         for i in range(currentImage.numberOfLarvae):
             cv2.imwrite(f"{pathName}/img/{totalLarvaeCounter+i}.jpg", currentImage.larvaes[i].image6464)
+            cv2.imwrite(f"{pathName}/binimg/{totalLarvaeCounter+i}.jpg", currentImage.larvaes[i].binaryImage)
         
         #-Montagem do HTML-#
         HTML.bigPicture(htmlFile, f"../{filename}", currentImage, imageIndex + 1 - startImage)

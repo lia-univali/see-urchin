@@ -52,7 +52,7 @@ class LarvaeOperation:
     @staticmethod
     def __getLarvaeInfoFromContour(contour, binaryImage, srcImage, srcImageFilenameIndex):
         (x, y, w, h) = cv2.boundingRect(contour)
-
+        
         #Tamanho da imagem/bordas nas imagens de proporção 1:1
         imgSize = max(w, h)
         border = imgSize//2
@@ -67,7 +67,7 @@ class LarvaeOperation:
             cv2.BORDER_CONSTANT,
             value=[255, 255, 255]
         )
-
+        
         #Aplicação das bordas na imagem binária
         binImg = cv2.copyMakeBorder(
             binaryImage,
@@ -81,25 +81,26 @@ class LarvaeOperation:
 
         result = Larvae(x, y, w, h)
         result.image = np.array(img[y:y+h*2, x:x+w*2])
-        result.binaryImage = np.array(binImg[y:y+h*2, x:x+w*2])
+        #result.binaryImage = np.array(binImg[y:y+h*2, x:x+w*2])
+
+        #watershed
+        binaryImageFiltered = ImageFunction.watershed(result.image)
+        contours, hier = cv2.findContours(binaryImageFiltered, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        
+        (x, y, w, h) = cv2.boundingRect(contours[0])
+        newImgSize = max(w, h)
 
         #Centralização da larva/Transormação em 1:1
-        cutTop = max(y - (imgSize - h), 0)
-        cutBottom = cutTop + imgSize * 2
-        cutLeft = max(x - (imgSize - w), 0)
-        cutRight = cutLeft + imgSize * 2
+        cutTop = max(y - (newImgSize - h), 0)
+        cutBottom = cutTop + newImgSize
+        cutLeft = max(x - (newImgSize - w), 0)
+        cutRight = cutLeft + newImgSize
 
-        result.image6464 = img[cutTop : cutBottom, cutLeft : cutRight]
+        result.image6464 = result.image[cutTop : cutBottom, cutLeft : cutRight]
         result.image6464 = np.array(cv2.resize(result.image6464, (64, 64)))
 
-        #Remove itens pequenos da imagem
-        binaryImageFiltered = ImageFunction.removeObjectsSmallerThan(
-            result.binaryImage, 
-            (
-                int(result.binaryImage.shape[1]) // 3,
-                int(result.binaryImage.shape[0]) // 3
-            )
-        )
+        result.binaryImage = binaryImageFiltered[cutTop : cutBottom, cutLeft : cutRight]
+        result.binaryImage = np.array(cv2.resize(result.binaryImage, (64, 64)))
 
         result.length = LarvaeOperation.__getLarvaeLength(binaryImageFiltered)
         result.evolStage = LarvaeOperation.__classifyLarvae(result)
