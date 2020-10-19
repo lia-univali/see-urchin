@@ -45,10 +45,13 @@ def watershed(end, nome_arquivo, wait):
     comum = counter.most_common()
     print(comum)
     valor = comum[0][0]
-    if comum[0][0] == 1 or comum[0][0] == -1:
-        valor = comum[1][0]
-        if comum[1][0] == 1 or comum[1][0] == -1:
-            valor = comum[2][0]
+    try:
+        if comum[0][0] == 1 or comum[0][0] == -1:
+            valor = comum[1][0]
+            if comum[1][0] == 1 or comum[1][0] == -1:
+                valor = comum[2][0]
+    except Exception:
+        print("erro")
 
     dilated = np.array(img_copia)
     dilated[markers == valor] = [255, 255, 255]
@@ -58,11 +61,12 @@ def watershed(end, nome_arquivo, wait):
     dilated = cv.cvtColor(dilated, cv.COLOR_BGR2GRAY)
     img_copia[dilated == 0] = [255, 255, 255]
 
-    cv.imwrite(nome_arquivo + ".jpg", img_copia)
+    cv.imwrite("C:/Users/hidan/git/see-urchin/database/results/b/watershed/"+nome_arquivo + ".jpg", img_copia)
     cv.imshow("image", img_copia)
     cv.resizeWindow('image', 200, 200)
     if wait:
         cv.waitKey(0)
 
 
-watershed('11.jpg', "saida11", True)
+# for arquivo in os.listdir("/see-urchin/database/results/b/img"):
+#     watershed("/see-urchin/database/results/b/img/"+arquivo, arquivo, False)
