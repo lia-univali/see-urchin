@@ -4,7 +4,7 @@ from imgClass import *
 import cv2
 from time import time
 
-class Larvae:
+class Larva:
     def __init__(self, x, y, w, h):
         self.x = x
         self.y = y
@@ -16,7 +16,7 @@ class Larvae:
         self.image6464 = []
         self.binaryImage = []
 
-class LarvaeImage:
+class LarvaImage:
     def __init__(self, filename):
         self.image = cv2.imread(filename)
         self.numberOfLarvae = 0
@@ -52,22 +52,22 @@ class LarvaeOperation:
     @staticmethod
     def __getLarvaeInfoFromContour(contour, binaryImage, srcImage, srcImageFilenameIndex):
         (x, y, w, h) = cv2.boundingRect(contour)
-        
+
         #Tamanho da imagem/bordas nas imagens de proporção 1:1
         imgSize = max(w, h)
         border = imgSize//2
 
         #Aplicação das bordas na imagem original
         img = cv2.copyMakeBorder(
-            srcImage, 
-            border, 
-            border, 
-            border, 
-            border, 
+            srcImage,
+            border,
+            border,
+            border,
+            border,
             cv2.BORDER_CONSTANT,
             value=[255, 255, 255]
         )
-        
+
         #Aplicação das bordas na imagem binária
         binImg = cv2.copyMakeBorder(
             binaryImage,
@@ -86,7 +86,7 @@ class LarvaeOperation:
         #watershed
         binaryImageFiltered = ImageFunction.watershed(result.image)
         contours, hier = cv2.findContours(binaryImageFiltered, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        
+
         (x, y, w, h) = cv2.boundingRect(contours[0])
         newImgSize = max(w, h)
 
@@ -124,7 +124,7 @@ class LarvaeOperation:
     def __classifyLarvae(larvae):
         if(abs(larvae.w - larvae.h) <= 20 and larvae.length <= 180): #larvae.length in pixels (180px is about 200µm)
             return "Egg"
-        else: 
+        else:
             return "Larvae"
         if circleArray is None:
             return "Unknown"
