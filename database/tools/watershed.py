@@ -1,7 +1,6 @@
 import cv2 as cv
 import numpy as np
 from collections import Counter
-import os
 
 
 def watershed(end, nome_arquivo, wait):

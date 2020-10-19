@@ -1,7 +1,7 @@
-from database.tools.buscaLarvas import getLarvae
+from database.tools.buscaLarvas import buscar
 
 if __name__ == "__main__":
-    getLarvae(
+    buscar(
         startImage=0,
         endImage=100
     )

@@ -1,13 +1,12 @@
 import numpy as np
-from imgClass import *
-from report import *
-from larvaeFunc import *
+from database.tools.imgClass import *
+from database.tools.relatorio import *
+from database.tools.funcoesLarva import *
 import cv2
 from os import path, makedirs
-import matplotlib.pyplot as pl
 from time import time    
 
-def getLarvae(startImage=0, endImage=1):
+def buscar(startImage=0, endImage=1):
     #-Croação do caminho path-#
     pathName = path.dirname(path.realpath(__file__)) + "/../results/" + input("Digite o arquivo onde as imagens serão salvas: ")
     if not path.exists(pathName):

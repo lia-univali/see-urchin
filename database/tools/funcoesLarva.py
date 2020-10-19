@@ -1,8 +1,6 @@
-from os import path, makedirs
-import numpy as np
-from imgClass import *
+
+from database.tools.imgClass import *
 import cv2
-from time import time
 
 class Larva:
     def __init__(self, x, y, w, h):
