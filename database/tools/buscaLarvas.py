@@ -1,17 +1,27 @@
 import numpy as np
-from database.tools.imgClass import *
-from database.tools.relatorio import *
-from database.tools.funcoesLarva import *
+from imgClass import *
+from relatorio import *
+from funcoesLarva import *
 import cv2
-from os import path, makedirs
+from os import path, makedirs, listdir
 from time import time    
 
-def buscar(startImage=0, endImage=1):
+def buscar():
     #-Croação do caminho path-#
     pathName = path.dirname(path.realpath(__file__)) + "/../results/" + input("Digite o arquivo onde as imagens serão salvas: ")
     if not path.exists(pathName):
         makedirs(pathName)
 
+    inputPath = input("Digite o caminho da pasta em que estão as imagens a serem analisadas: ")
+    imageList = listdir(inputPath)
+    suffixes = ("jpg", "jpeg", "png")    
+    imageList = list(
+        filter(
+            lambda image: image.endswith(suffixes),
+            imageList
+        )
+    )
+    
     #-Criação da pasta img-#
     if not path.exists(pathName + "/img"):
         makedirs(pathName + "/img")
@@ -29,11 +39,11 @@ def buscar(startImage=0, endImage=1):
     totalLarvaeCounter = 0
 
     #-Loop principal - Processamento de imagem-#
-    for imageIndex in range(startImage, endImage):
+    for imageIndex in range(len(imageList)):
         #-Image variables declaration-#
-        filename = f"../input/0 ({imageIndex+1}).jpg"
-        currentImage = LarvaeImage(filename)
-        imageMark = LarvaeImage(filename)
+        filename = inputPath + "\\" + imageList[imageIndex]
+        currentImage = LarvaImage(filename)
+        imageMark = LarvaImage(filename)
 
         #-Processamento de imagem-#
         print(f"Processando {filename}...")
@@ -63,8 +73,8 @@ def buscar(startImage=0, endImage=1):
             cv2.imwrite(f"{pathName}/binimg/{totalLarvaeCounter+i}.jpg", currentImage.larvaes[i].binaryImage)
         
         #-Montagem do HTML-#
-        HTML.bigPicture(htmlFile, f"../{filename}", currentImage, imageIndex + 1 - startImage)
-        HTML.bigPicture(htmlFile, f"{pathName}/markedImage{imageIndex}.jpg", currentImage, imageIndex + 1 - startImage)
+        HTML.bigPicture(htmlFile, inputPath + "\\" + imageList[imageIndex], currentImage, imageIndex + 1)
+        HTML.bigPicture(htmlFile, f"{pathName}/markedImage{imageIndex}.jpg", currentImage, imageIndex + 1)
         HTML.lineBreak(htmlFile)
         HTML.write(htmlFile, "<div>")
         if(currentImage.larvaes is not None):

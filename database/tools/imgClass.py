@@ -31,7 +31,7 @@ class Img:
         self.image[self.image < 1] = 255
         self.image[self.image <= 128] = 0
 
-    # ---Invert---#
+    #---Invert---#
     def invert(self):
         self.image = cv2.bitwise_not(self.image)
 
@@ -81,13 +81,7 @@ class Img:
                     w < self.image.shape[1] * 0.035):
                 return True
         return False
-
-    # ---Show---#
-    def show(self, title=""):
-        cv2.namedWindow(title, cv2.WINDOW_NORMAL)
-        cv2.imshow(title, self.image)
-
-
+            
 class Image:
     def __init__(self, filename):
         try:
@@ -155,7 +149,6 @@ class ImageFunction:
 
         # buscando segundo valor
         comum = counter.most_common()
-        print(comum)
         valor = comum[0][0]
         try:
             if comum[0][0] == 1 or comum[0][0] == -1:

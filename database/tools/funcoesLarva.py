@@ -1,5 +1,4 @@
-
-from database.tools.imgClass import *
+from imgClass import *
 import cv2
 
 class Larva:
@@ -77,7 +76,7 @@ class LarvaeOperation:
             value=[0, 0, 0]
         )
 
-        result = Larvae(x, y, w, h)
+        result = Larva(x, y, w, h)
         result.image = np.array(img[y:y+h*2, x:x+w*2])
         #result.binaryImage = np.array(binImg[y:y+h*2, x:x+w*2])
 

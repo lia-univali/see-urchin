@@ -4,7 +4,6 @@ from collections import Counter
 
 
 def watershed(end, nome_arquivo, wait):
-    print("end = " + end)
     img = cv.imread(end)
     img_copia = cv.imread(end)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -24,8 +23,6 @@ def watershed(end, nome_arquivo, wait):
     sure_fg = np.uint8(sure_fg)
     unknown = cv.subtract(sure_bg, sure_fg)
 
-    # print(sure_bg)
-
     # Marker labelling
     ret, markers = cv.connectedComponents(sure_fg)
     # Add one to all labels so that sure background is not 0, but 1
@@ -42,7 +39,6 @@ def watershed(end, nome_arquivo, wait):
 
     # buscando segundo valor
     comum = counter.most_common()
-    print(comum)
     valor = comum[0][0]
     try:
         if comum[0][0] == 1 or comum[0][0] == -1:
