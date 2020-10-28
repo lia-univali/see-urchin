@@ -1,8 +1,8 @@
 
 class HTML:
     @staticmethod
-    def begin(htmlFile):
-        htmlFile.write('''
+    def begin(arquivoHTML):
+        arquivoHTML.write('''
         <!DOCTYPE html>
         <head>
             <style>
@@ -157,49 +157,49 @@ class HTML:
         ''')
 
     @staticmethod
-    def bigPicture(htmlFile, pathName, imageInfo, imageNumber):
-        htmlFile.write(f'''
+    def bigPicture(arquivoHTML, caminho, infoImagem, numeroImagem):
+        arquivoHTML.write(f'''
         <div id="bigPictureBase">
-            <img src="{pathName}" id="bigPicture">
+            <img src="{caminho}" id="bigPicture">
             <div id="infoTextBox">
-                <p id="imageInfo"> Image #{imageNumber}</p>
-                <p id="imageInfo"> There are {imageInfo.numberOfLarvae} larvae</p>
+                <p id="imageInfo"> Image #{numeroImagem}</p>
+                <p id="imageInfo"> There are {infoImagem.numeroLarvas} larvae</p>
                 <p id="imageInfo"> in this image; </p>
-                <p id="imageInfo"> {imageInfo.numberOfEggs} of them are eggs; </p>
-                <p id="imageInfo"> {imageInfo.numberOfAdults} of them are adults. </p>
+                <p id="imageInfo"> {infoImagem.numeroOvos} of them are eggs; </p>
+                <p id="imageInfo"> {infoImagem.numeroAdultos} of them are adults. </p>
             </div>
         </div>
         ''')
 
     @staticmethod
-    def bar(htmlFile, imagePath, currentLarvae, larvaeNumber):
-        htmlFile.write(f'''
+    def bar(arquivoHTML, caminho, larvaAtual, numeroLarva):
+        arquivoHTML.write(f'''
         <div id=\"imgBase\">
         ''')
-        if(currentLarvae.evolStage == "Egg"):
-            htmlFile.write(f"<img src=\"{imagePath}\" id=\"tinyPicture\" style=\"border-color: #ff7\">")
-        elif(currentLarvae.evolStage == "Larvae"):
-            htmlFile.write(f"<img src=\"{imagePath}\" id=\"tinyPicture\" style=\"border-color: #7ff\">")
+        if(larvaAtual.estagioEvolutivo == "Egg"):
+            arquivoHTML.write(f"<img src=\"{caminho}\" id=\"tinyPicture\" style=\"border-color: #ff7\">")
+        elif(larvaAtual.estagioEvolutivo == "Larvae"):
+            arquivoHTML.write(f"<img src=\"{caminho}\" id=\"tinyPicture\" style=\"border-color: #7ff\">")
         else:
-            htmlFile.write(f"<img src=\"{imagePath}\" id=\"tinyPicture\" style=\"border-color: #111\">")
-        htmlFile.write(f'''
+            arquivoHTML.write(f"<img src=\"{caminho}\" id=\"tinyPicture\" style=\"border-color: #111\">")
+        arquivoHTML.write(f'''
             <div id="infoTextBox">
-                <p id="imageInfo"> Larvae #{larvaeNumber}: </p>
-                <p id="imageInfo"> Position: ({currentLarvae.x}, {currentLarvae.y}); </p>
-                <p id="imageInfo"> Width: {currentLarvae.w}, Height: {currentLarvae.h}; </p>
-                <p id="imageInfo"> Length: {currentLarvae.length}px ({round((currentLarvae.length / 90) * 100, 2)}µm); </p>
-                <p id="imageInfo"> Evolution stage: {currentLarvae.evolStage}. </p>
+                <p id="imageInfo"> Larvae #{numeroLarva}: </p>
+                <p id="imageInfo"> Position: ({larvaAtual.x}, {larvaAtual.y}); </p>
+                <p id="imageInfo"> Width: {larvaAtual.w}, Height: {larvaAtual.h}; </p>
+                <p id="imageInfo"> Length: {larvaAtual.comprimento}px ({round((larvaAtual.comprimento / 90) * 100, 2)}µm); </p>
+                <p id="imageInfo"> Evolution stage: {larvaAtual.estagioEvolutivo}. </p>
             </div>
         </div>
         ''')
 
     @staticmethod
-    def lineBreak(htmlFile):
-        htmlFile.write('''<br>''')
+    def lineBreak(arquivoHTML):
+        arquivoHTML.write('''<br>''')
 
     @staticmethod
-    def end(htmlFile):
-        htmlFile.write('''
+    def end(arquivoHTML):
+        arquivoHTML.write('''
                 <div style=\"margin: 100px 0px 50px 0px;\">
                     <div style=\"display: inline-block; border: solid 1px black; background-color: #7ff; width: 10px; height: 10px;\"></div>
                     <p style=\"display: inline\"> - Adult Larvae; </p>
@@ -222,5 +222,5 @@ class HTML:
         ''')
 
     @staticmethod
-    def write(htmlFile, string):
-        htmlFile.write(string)
+    def write(arquivoHTML, string):
+        arquivoHTML.write(string)

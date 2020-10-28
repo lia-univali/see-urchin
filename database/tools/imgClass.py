@@ -6,79 +6,83 @@ import numpy as np
 
 class Img:
     # ======================================INIT=======================================
-    def __init__(self, img):
-        self.image = img
+    def __init__(self, img: np.ndarray):
+        self.imagem = img
 
     # ============================IMAGE-REPLACING-FUNCTIONS============================
     # Functions that replaces the target image by the transformed one
 
     # ---Binary---#
-    def binary(self, limit=127):
-        binary = self.image
-        binary[binary >= limit] = 255
-        binary[binary < limit] = 0
-        self.image = binary
+    def binario(self, limit=127):
+        binario = self.imagem
+        binario[binario >= limit] = 255
+        binario[binario < limit] = 0
+        self.imagem = binario
 
     # ---Dilate---#
-    def dilate(self, ksize=(3, 3)):
+    def dilatar(self, ksize=(3, 3)):
         kernel = np.ones((ksize))
-        self.image = cv2.dilate(self.image, kernel)
+        self.imagem = cv2.dilate(self.imagem, kernel)
 
     # ---Flood Fill---#
     def floodFill(self, dstPixel=(0, 0)):
-        cv2.floodFill(self.image, np.zeros((self.image.shape[0] + 2, self.image.shape[1] + 2), dtype='uint8'), (0, 0),
-                      128)
-        self.image[self.image < 1] = 255
-        self.image[self.image <= 128] = 0
+        cv2.floodFill(
+            self.imagem,
+            np.zeros((self.imagem.shape[0] + 2, self.imagem.shape[1] + 2), dtype='uint8'),
+            (0, 0),
+            128
+        )
+        self.imagem[self.imagem < 1] = 255
+        self.imagem[self.imagem <= 128] = 0
 
     #---Invert---#
-    def invert(self):
-        self.image = cv2.bitwise_not(self.image)
+    def inverter(self):
+        self.imagem = cv2.bitwise_not(self.imagem)
 
     # ---Mark Objects---#
-    def markObjects(self, dst, color):
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    def marcarObjetos(self, dst: np.ndarray, color: list):
+        contours, hier = cv2.findContours(self.imagem, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
             size = max(w, h)
             borderSize = size // 2
-            cutTop = y - (borderSize * 3 - h)
-            cutBottom = cutTop + size * 2
-            cutLeft = x - (borderSize * 3 - w)
-            cutRight = cutLeft + size * 2
-            cv2.rectangle(dst, (cutLeft, cutTop), (cutRight, cutBottom), color, 5)
+            corteCima = y - (borderSize * 3 - h)
+            corteBaixo = corteCima + size * 2
+            corteEsquerda = x - (borderSize * 3 - w)
+            corteDireita = corteEsquerda + size * 2
+            cv2.rectangle(dst, (corteEsquerda, corteCima), (corteDireita, corteBaixo), color, 5)
 
     # ---Remove Objects by Size---#
-    def removeObjectsBySize(self, minPercentOfNonWhite=20):
-        imgArea = self.image.shape[0] * self.image.shape[1]
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    def removerObjetosPorTamanho(self, minPercentOfNonWhite=20):
+        imgArea = self.imagem.shape[0] * self.imagem.shape[1]
+        contours, hier = cv2.findContours(self.imagem, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if ((cv2.countNonZero(self.image[y:y + h, x:x + w]) < h * w * minPercentOfNonWhite / 100) or \
+            if ((cv2.countNonZero(self.imagem[y:y + h, x:x + w]) < h * w * minPercentOfNonWhite / 100) or \
                     h > w * 4 or \
                     w > h * 4 or \
-                    h < self.image.shape[0] * 0.035 or \
-                    w < self.image.shape[1] * 0.035):
-                self.image[y:y + h, x:x + w] = 0
-            elif (w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4):
-                cv2.floodFill(self.image, np.zeros((self.image.shape[0] + 2, self.image.shape[1] + 2), dtype='uint8'),
+                    h < self.imagem.shape[0] * 0.035 or \
+                    w < self.imagem.shape[1] * 0.035):
+                self.imagem[y:y + h, x:x + w] = 0
+            elif (w > self.imagem.shape[1] / 4 or h > self.imagem.shape[0] / 4):
+                cv2.floodFill(self.imagem, np.zeros((self.imagem.shape[0] + 2, self.imagem.shape[1] + 2), dtype='uint8'),
                               (cnt[0][0][0], cnt[0][0][1]), 0)
 
     # ============================TOOLS============================
     # ------------Functions that do not alter the image------------
 
     # ---Check for Removable Objects---#
-    def checkForRemovableObjects(self):
-        contours, hier = cv2.findContours(self.image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        imgArea = self.image.shape[0] * self.image.shape[1]
+    def checarObjetosRemoviveis(self):
+        contours, hier = cv2.findContours(self.imagem, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        imgArea = self.imagem.shape[0] * self.imagem.shape[1]
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            if (w > self.image.shape[1] / 4 or h > self.image.shape[0] / 4 or \
-                    (cv2.countNonZero(self.image[y:y + h, x:x + w]) < h * w * 20 / 100) or \
+            if (w > self.imagem.shape[1] / 4 or h > self.imagem.shape[0] / 4 or \
+                    (cv2.countNonZero(self.imagem[y:y + h, x:x + w]) < h * w * 20 / 100) or \
                     h > w * 4 or \
                     w > h * 4 or \
-                    h < self.image.shape[0] * 0.035 or \
-                    w < self.image.shape[1] * 0.035):
+                    h < self.imagem.shape[0] * 0.035 or \
+                    w < self.imagem.shape[1] * 0.035):
                 return True
         return False
             
@@ -86,34 +90,20 @@ class Image:
     def __init__(self, filename):
         try:
             self.original = Img(cv2.cvtColor(cv2.imread(filename), cv2.COLOR_RGB2BGR))
-            self.gray = Img(cv2.cvtColor(self.original.image, cv2.COLOR_BGR2GRAY))
+            self.escalaCinza = Img(cv2.cvtColor(self.original.imagem, cv2.COLOR_BGR2GRAY))
         except:
-            print("\nAn error has occurred while loading the image.")
-            print(" - Check if the image is located in database/input.")
-            print(" - Check if the image is named \"0 ([any number]).jpg\".")
+            print("\nUm erro ocorreu ao carregar a imagem.")
             quit()
 
 
-class ImageFunction:
+class FuncoesImagem:
     @staticmethod
-    def removeObjectsSmallerThan(image, size):
-        result = np.array(image)
-        counter = 0
-        contours, hier = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        for cnt in contours:
-            counter += 1
-            (x, y, w, h) = cv2.boundingRect(cnt)
-            if (w < size[0] or h < size[1]):
-                result[y:y + h, x:x + w] = 0
-        return result
-
-    @staticmethod
-    def getLargestContour(contourArray):
-        largestContour = 0
-        for i in range(len(contourArray)):
-            if (len(contourArray[i]) > len(contourArray[largestContour])):
-                largestContour = i
-        return largestContour
+    def pegarContornoMaior(contornos: np.ndarray):
+        maiorContorno = 0
+        for i in range(len(contornos)):
+            if (len(contornos[i]) > len(contornos[maiorContorno])):
+                maiorContorno = i
+        return maiorContorno
 
     @staticmethod
     def watershed(image):
