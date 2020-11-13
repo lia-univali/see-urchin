@@ -5,6 +5,7 @@ from funcoesLarva import *
 import cv2
 from os import path, makedirs, listdir
 from time import time    
+from classificacao import classificar
 
 def buscar():
     #-Croação do caminho path-#
@@ -49,7 +50,6 @@ def buscar():
         imgBinariaFiltrada = FuncoesLarva.processarLarva(nomeArquivo)
         while(imgBinariaFiltrada.checarObjetosRemoviveis()):
             imgBinariaFiltrada.removerObjetosPorTamanho()        
-
         #-Contagem de Larvas-#
         contornos, hier = cv2.findContours(imgBinariaFiltrada.imagem, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         imagemAtual.numeroLarvas = len(contornos)
@@ -67,8 +67,15 @@ def buscar():
 
         #-Salvamento das Imagens-#
         for i in range(imagemAtual.numeroLarvas):
-            cv2.imwrite(f"{caminho}/img/{numeroLarvasTotal+i}.jpg", imagemAtual.larvas[i].imagem6464)
-            cv2.imwrite(f"{caminho}/binimg/{numeroLarvasTotal+i}.jpg", imagemAtual.larvas[i].imagemBinaria)
+            validaLarva = classificar(imagemAtual.larvas[i].imagem6464)
+            if(validaLarva):
+                cv2.imwrite(f"{caminho}/img/{numeroLarvasTotal+i}.jpg", imagemAtual.larvas[i].imagem6464)
+                cv2.imwrite(f"{caminho}/binimg/{numeroLarvasTotal+i}.jpg", imagemAtual.larvas[i].imagemBinaria)
+            else:
+                cv2.imwrite(f"{caminho}/trashimg/{numeroLarvasTotal+i}.jpg", imagemAtual.larvas[i].imagem6464)
+                imagemAtual.larvas.pop(i)
+                i -= 1
+
         
         #-Montagem do HTML-#
         HTML.bigPicture(arquivoHTML, caminhoInput + "\\" + listaImagens[indiceImagem], imagemAtual, indiceImagem + 1)
@@ -77,12 +84,13 @@ def buscar():
         HTML.write(arquivoHTML, "<div>")
         if(imagemAtual.larvas is not None):
             for i in range(imagemAtual.numeroLarvas):
-                HTML.bar(
-                    arquivoHTML,
-                    f"{caminho}/img/{numeroLarvasTotal + i}.jpg",
-                    imagemAtual.larvas[i],
-                    numeroLarvasTotal + 1 + i
-                )
+                if(classificar(imagemAtual.larvas[i].imagem6464)):
+                    HTML.bar(
+                        arquivoHTML,
+                        f"{caminho}/img/{numeroLarvasTotal + i}.jpg",
+                        imagemAtual.larvas[i],
+                        numeroLarvasTotal + 1 + i
+                    )
         HTML.write(arquivoHTML, "</div>")
         HTML.lineBreak(arquivoHTML)
         

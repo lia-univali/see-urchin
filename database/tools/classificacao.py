@@ -37,8 +37,8 @@ def classificar(end):
 
     # run the inference
     prediction = model.predict(data)
-    print(prediction)
+    #print(prediction)
     prediction = prediction.tolist()[0]
-    print(prediction)
-    print('Larva' if prediction[0] > prediction[1] else 'Sujeira')
+    #print(prediction)
+    #print('Larva' if prediction[0] > prediction[1] else 'Sujeira')
     return True if prediction[0] > prediction[1] else False
